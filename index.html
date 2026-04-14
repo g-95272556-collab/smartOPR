@@ -761,7 +761,7 @@
           <div class="pdf-school-address">
             89108 Sabah, Malaysia<br>
             Tel: 089-XXX XXX &nbsp;|&nbsp; Faks: 089-XXX XXX<br>
-            Email: skk@moe-dl.edu.my
+            Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="15667e7e55787a703871793b7071603b786c">[email&#160;protected]</a>
           </div>
         </div>
         <img src="https://drive.google.com/thumbnail?id=1RyaPhoYnmA4p0uzgiutPEkTw6uL7kfVY&sz=w200"
@@ -856,7 +856,7 @@
   </div><!-- /pdf-page -->
 </div><!-- /pdf-template -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ===== AI GENERATION =====
 async function janaAI(field) {
   const namaProgram = document.getElementById('nama_program').value.trim();
@@ -915,16 +915,22 @@ Maklumat Program:
 ${konteks}`
   };
 
+  // ⚙️ URL Cloudflare Worker anda (DeepSeek) — gantikan selepas deploy
+  const WORKER_URL = 'https://smartopr-ai.g-95272556.workers.dev';
+
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
         messages: [{ role: 'user', content: prompts[field] }]
       })
     });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error('HTTP ' + response.status);
+    }
 
     const data = await response.json();
     const result = data.content?.find(b => b.type === 'text')?.text || '';
@@ -937,7 +943,7 @@ ${konteks}`
     }
   } catch (err) {
     console.error(err);
-    showStatus('❌ Ralat semasa menghubungi AI. Sila cuba semula.', 'error');
+    showStatus('❌ Ralat AI: ' + err.message + '. Pastikan WORKER_URL sudah dikemaskini dalam fail HTML.', 'error');
     textarea.placeholder = 'Sila cuba semula atau taip secara manual...';
   } finally {
     btn.disabled = false;
@@ -1156,14 +1162,3 @@ async function generatePDF() {
     pdf.save(filename);
 
     showStatus('✅ PDF berjaya dijana dan dimuat turun!', 'success');
-  } catch (err) {
-    console.error(err);
-    showStatus('❌ Ralat semasa menjana PDF. Sila cuba semula.', 'error');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '📄 JANA PDF';
-  }
-}
-</script>
-</body>
-</html>
