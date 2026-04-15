@@ -787,7 +787,7 @@
         </div>
         <div class="field">
           <label>Alamat Institusi</label>
-          <input type="text" id="set-alamat" value="89108 Sabah, Malaysia" placeholder="Alamat institusi">
+          <input type="text" id="set-alamat" value="89320 Sabah, Malaysia" placeholder="Alamat institusi">
         </div>
         <div class="field">
           <label>No. Telefon</label>
@@ -811,11 +811,11 @@
         </div>
         <div class="field">
           <label>Nama Pengesah</label>
-          <input type="text" id="set-pengesah" placeholder="Nama Guru Besar / PK">
+          <input type="text" id="set-pengesah" placeholder="Nama Guru Besar / Pengetua / PK">
         </div>
         <div class="field">
           <label>Jawatan Pengesah</label>
-          <input type="text" id="set-jawatan-pengesah" value="Guru Besar" placeholder="Contoh: Guru Besar">
+          <input type="text" id="set-jawatan-pengesah" value="" placeholder="Contoh: Guru Besar">
         </div>
       </div>
       <div class="field">
@@ -1123,22 +1123,22 @@ ${aktivitiSedia ? 'Aktiviti (sedia ada): ' + aktivitiSedia : ''}
   `.trim();
 
   const prompts = {
-    objektif: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan OBJEKTIF program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal dan tepat. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 5 objektif. Pastikan objektif bermula dengan kata kerja yang sesuai (meningkatkan, memupuk, memberi, mendedahkan, dsb). HANYA tulis objektif sahaja, tiada pengenalan atau penutup.
+    objektif: `Kamu adalah pembantu penulisan laporan program sekolah/institusi pendidikan yang profesional. Berdasarkan maklumat program berikut, tuliskan OBJEKTIF program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal dan tepat. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 5 objektif. Pastikan objektif bermula dengan kata kerja yang sesuai (meningkatkan, memupuk, memberi, mendedahkan, dsb). HANYA tulis objektif sahaja, tiada pengenalan atau penutup.
 
 Maklumat Program:
 ${konteks}`,
 
-    aktiviti: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan AKTIVITI YANG DIJALANKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 4 hingga 6 aktiviti yang logik dan sesuai dengan konteks program. HANYA tulis senarai aktiviti sahaja, tiada pengenalan atau penutup.
+    aktiviti: `Kamu adalah pembantu penulisan laporan program sekolah/institusi pendidikan yang profesional. Berdasarkan maklumat program berikut, tuliskan AKTIVITI YANG DIJALANKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 4 hingga 6 aktiviti yang logik dan sesuai dengan konteks program. HANYA tulis senarai aktiviti sahaja, tiada pengenalan atau penutup.
 
 Maklumat Program:
 ${konteks}`,
 
-    kekuatan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KEKUATAN program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 4 kekuatan yang spesifik dan relevan. HANYA tulis kekuatan sahaja, tiada pengenalan atau penutup.
+    kekuatan: `Kamu adalah pembantu penulisan laporan program sekolah/institusi pendidikan yang profesional. Berdasarkan maklumat program berikut, tuliskan KEKUATAN program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 4 kekuatan yang spesifik dan relevan. HANYA tulis kekuatan sahaja, tiada pengenalan atau penutup.
 
 Maklumat Program:
 ${konteks}`,
 
-    kelemahan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KELEMAHAN DAN CADANGAN PENAMBAHBAIKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 2 hingga 3 kelemahan beserta cadangan penambahbaikan yang konstruktif. HANYA tulis kelemahan dan cadangan sahaja, tiada pengenalan atau penutup.
+    kelemahan: `Kamu adalah pembantu penulisan laporan program sekolah/institusi pendidikan yang profesional. Berdasarkan maklumat program berikut, tuliskan KELEMAHAN DAN CADANGAN PENAMBAHBAIKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 2 hingga 3 kelemahan beserta cadangan penambahbaikan yang konstruktif. HANYA tulis kelemahan dan cadangan sahaja, tiada pengenalan atau penutup.
 
 Maklumat Program:
 ${konteks}`
