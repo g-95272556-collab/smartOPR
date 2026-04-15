@@ -933,13 +933,25 @@ ${konteks}`
     }
 
     const data = await response.json();
-    const result = data.content?.find(b => b.type === 'text')?.text || '';
+
+    // Handle error from worker
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    // Extract text - support both DeepSeek and Claude response formats
+    let result = '';
+    if (data.content && Array.isArray(data.content)) {
+      result = data.content[0]?.text || data.content.find(b => b.type === 'text')?.text || '';
+    } else if (data.choices && Array.isArray(data.choices)) {
+      result = data.choices[0]?.message?.content || '';
+    }
 
     if (result) {
       textarea.value = result.trim();
       showStatus(`✅ Kandungan ${field} berjaya dijana oleh AI! Anda boleh edit jika perlu.`, 'success');
     } else {
-      throw new Error('Tiada kandungan dikembalikan');
+      throw new Error('Tiada kandungan dijana. Cuba semula.');
     }
   } catch (err) {
     console.error(err);
