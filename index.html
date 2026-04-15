@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan OPR SK Kiandongo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+  :root {
+    --navy: #0a2351;
+    --gold: #c8a84b;
+    --gold-light: #f0d98c;
+    --cream: #faf8f3;
+    --white: #ffffff;
+    --border: #d0c9b8;
+    --text: #1a1a2e;
+    --muted: #5a5a7a;
+    --accent: #1a3d7c;
+    --success: #2e7d32;
+    --danger: #c62828;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: linear-gradient(135deg, #0a1628 0%, #1a3d7c 50%, #0a2351 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: var(--text);
+  }
+
+  /* ===== APP WRAPPER ===== */
+  .app-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ===== APP HEADER ===== */
+  .app-header {
+    background: var(--navy);
+    border-radius: 16px 16px 0 0;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .header-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(200,168,75,0.4));
+  }
+
+  .header-center {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+
+  .header-center h1 {
+    font-family: 'Merriweather', serif;
+    color: var(--gold);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    line-height: 1.3;
+  }
+
+  .header-center p {
+    color: #a0b4d4;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ===== FORM CARD ===== */
+  .form-card {
+    background: var(--cream);
+    padding: 36px 40px;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  }
+
+  .section-title {
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title:first-of-type { margin-top: 0; }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  /* ===== GRID ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 640px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .app-header { flex-direction: column; gap: 12px; text-align: center; }
+    .form-card { padding: 24px 18px; }
+  }
+
+  /* ===== FORM FIELDS ===== */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(10,35,81,0.12);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+  }
+
+  /* ===== IMAGE UPLOAD ===== */
+  .upload-zone {
+    border: 2px dashed var(--gold);
+    border-radius: 12px;
+    background: #fffdf5;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .upload-zone:hover {
+    background: #fff8e5;
+    border-color: var(--navy);
+  }
+
+  .upload-zone input { display: none; }
+
+  .upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .upload-zone h3 {
+    font-size: 1rem;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .upload-zone p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .preview-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: #eee;
+  }
+
+  .preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .preview-item .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(198,40,40,0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  .img-count-badge {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+
+  /* ===== BUTTON ===== */
+  .btn-generate {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin-top: 32px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--accent) 100%);
+    color: var(--gold);
+    font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(10,35,81,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-generate::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(200,168,75,0.15), transparent);
+    transition: left 0.4s;
+  }
+
+  .btn-generate:hover::before { left: 100%; }
+  .btn-generate:hover {
+    background: linear-gradient(135deg, #1a3d7c, #0d5299);
+    box-shadow: 0 6px 24px rgba(10,35,81,0.6);
+    transform: translateY(-1px);
+  }
+
+  .btn-generate:active { transform: translateY(0); }
+
+  .btn-generate:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ===== STATUS MESSAGE ===== */
+  #status-msg {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+  #status-msg.info { background: #e3f2fd; color: #1565c0; display: block; }
+  #status-msg.error { background: #ffebee; color: var(--danger); display: block; }
+  #status-msg.success { background: #e8f5e9; color: var(--success); display: block; }
+
+  /* ===== PDF TEMPLATE (hidden) ===== */
+  #pdf-template {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 794px;
+    background: white;
+    font-family: 'Source Sans 3', Arial, sans-serif;
+    z-index: -1;
+  }
+
+  /* PDF styles */
+  .pdf-page {
+    width: 794px;
+    min-height: 1123px;
+    padding: 36px 44px;
+    background: white;
+    position: relative;
+  }
+
+  .pdf-watermark-line {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    font-weight: 900;
+    color: #0a2351;
+    transform: rotate(-30deg);
+    font-family: 'Merriweather', serif;
+  }
+
+  .pdf-content { position: relative; z-index: 1; }
+
+  /* PDF Header */
+  .pdf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .pdf-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+  }
+
+  .pdf-header-center {
+    text-align: center;
+    flex: 1;
+    padding: 0 14px;
+  }
+
+  .pdf-kementerian {
+    font-size: 8px;
+    color: #555;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  .pdf-school-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0a2351;
+    font-family: 'Merriweather', Georgia, serif;
+    line-height: 1.2;
+  }
+
+  .pdf-school-address {
+    font-size: 8.5px;
+    color: #444;
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  .pdf-header-divider {
+    border: none;
+    border-top: 3px solid #0a2351;
+    border-bottom: 1px solid #c8a84b;
+    margin: 6px 0;
+  }
+
+  .pdf-report-title-bar {
+    background: #0a2351;
+    color: #c8a84b;
+    text-align: center;
+    padding: 8px;
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* PDF Table */
+  .pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 9.5px;
+  }
+
+  .pdf-table td {
+    border: 1px solid #b0b8c8;
+    padding: 5px 8px;
+    vertical-align: top;
+    line-height: 1.5;
+    color: #1a1a2e;
+  }
+
+  .pdf-table .label-cell {
+    background: #eef2fa;
+    font-weight: 700;
+    color: #0a2351;
+    width: 28%;
+    white-space: nowrap;
+  }
+
+  .pdf-table .value-cell {
+    background: white;
+    width: 22%;
+  }
+
+  .pdf-section-header td {
+    background: #1a3d7c;
+    color: #c8a84b;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 5px 8px;
+  }
+
+  .pdf-table .full-width {
+    width: 100%;
+  }
+
+  /* Images Grid */
+  .pdf-images-title {
+    background: #1a3d7c;
+    color: #c8a84b;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 5px 8px;
+    border: 1px solid #b0b8c8;
+    margin-bottom: 0;
+  }
+
+  .pdf-images-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    padding: 6px;
+    border: 1px solid #b0b8c8;
+    border-top: none;
+    background: #f8f8f8;
+    margin-bottom: 10px;
+  }
+
+  .pdf-img-cell {
+    aspect-ratio: 4/3;
+    background: #ddd;
+    overflow: hidden;
+    border: 1px solid #ccc;
+  }
+
+  .pdf-img-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* PDF Footer */
+  .pdf-footer {
+    margin-top: 10px;
+    border-top: 2px solid #0a2351;
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .pdf-signature-block {
+    font-size: 8.5px;
+    color: #333;
+    text-align: center;
+    width: 200px;
+  }
+
+  .pdf-signature-line {
+    border-top: 1px solid #333;
+    margin-bottom: 3px;
+    margin-top: 30px;
+  }
+
+  .pdf-footer-center {
+    font-size: 7.5px;
+    color: #888;
+    text-align: center;
+    flex: 1;
+  }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(200,168,75,0.3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== AI BUTTON ===== */
+  .field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .field-header label { margin-bottom: 0; }
+
+  .btn-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #6a0dad, #9c27b0);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(106,13,173,0.3);
+  }
+
+  .btn-ai:hover {
+    background: linear-gradient(135deg, #7b1fa2, #ab47bc);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(106,13,173,0.4);
+  }
+
+  .btn-ai:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-ai .ai-icon { font-size: 0.9rem; }
+
+  .ai-generating {
+    border-color: #9c27b0 !important;
+    box-shadow: 0 0 0 3px rgba(156,39,176,0.15) !important;
+    background: #fdf6ff !important;
+  }
+
+  .ai-banner {
+    background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+    border: 1px solid #ce93d8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #6a0dad;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a3d7c, #0a2351);
+    border: 1px solid #c8a84b;
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    color: #c8a84b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .settings-toggle:hover { background: linear-gradient(135deg, #243f7a, #1a3050); }
+  .settings-panel {
+    background: #f0f4ff;
+    border: 1px solid #c8a84b;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .settings-panel.open { display: block; }
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .logo-upload-zone {
+    border: 2px dashed #c8a84b;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    background: #fffdf5;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+    color: #5a5a7a;
+  }
+  .logo-upload-zone:hover { background: #fff8e5; }
+  .logo-preview { width: 60px; height: 60px; object-fit: contain; margin: 6px auto; display: block; }
+
+  /* ===== POPUP ===== */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .popup-overlay.show { display: flex; }
+  .popup-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .popup-logo { font-size: 3rem; margin-bottom: 12px; }
+  .popup-title { font-family: 'Merriweather', serif; font-size: 1.2rem; color: #0a2351; font-weight: 700; margin-bottom: 8px; }
+  .popup-credit { font-size: 0.85rem; color: #5a5a7a; margin-bottom: 6px; }
+  .popup-handle { font-size: 1rem; color: #6a0dad; font-weight: 700; margin-bottom: 20px; }
+  .popup-btn {
+    background: linear-gradient(135deg, #0a2351, #1a3d7c);
+    color: #c8a84b;
+    border: 2px solid #c8a84b;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-family: 'Merriweather', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .popup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(10,35,81,0.4); }
+
+  /* ===== FOOTER ===== */
+  .app-footer {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+    margin-top: 20px;
+    padding-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- APP HEADER -->
+  <div class="app-header">
+    <img src="https://drive.google.com/thumbnail?id=1RyaPhoYnmA4p0uzgiutPEkTw6uL7kfVY&sz=w200" 
+         alt="Logo SK Kiandongo" class="header-logo" id="logo-left"
+         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0OCIgZmlsbD0iI2M4YTg0YiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzBhMjM1MSIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+U0tLPC90ZXh0Pjwvc3ZnPg=='">
+
+    <div class="header-center">
+      <h1>SmartOPR SK KIANDONGO</h1>
+      <p>Sistem Jana Laporan Program / Aktiviti</p>
+    </div>
+
+    <img src="https://drive.google.com/thumbnail?id=1RyaPhoYnmA4p0uzgiutPEkTw6uL7kfVY&sz=w200" 
+         alt="Logo SK Kiandongo" class="header-logo" id="logo-right"
+         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0OCIgZmlsbD0iI2M4YTg0YiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzBhMjM1MSIgZm9udC1mYW1pbHk9InNlcmlmIiBmb250LXdlaWdodD0iYm9sZCI+U0tLPC90ZXh0Pjwvc3ZnPg=='">
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div style="margin-bottom:6px;">
+    <div class="settings-toggle" onclick="toggleSettings()">
+      <span>⚙️ Tetapan Sekolah</span>
+      <span id="settings-arrow">▼</span>
+    </div>
+    <div class="settings-panel" id="settings-panel">
+      <div class="settings-grid" style="margin-bottom:12px;">
+        <div class="field">
+          <label>Nama Sekolah</label>
+          <input type="text" id="set-nama-sekolah" value="SEKOLAH KEBANGSAAN KIANDONGO" placeholder="Nama sekolah">
+        </div>
+        <div class="field">
+          <label>Alamat Sekolah</label>
+          <input type="text" id="set-alamat" value="89108 Sabah, Malaysia" placeholder="Alamat sekolah">
+        </div>
+        <div class="field">
+          <label>No. Telefon</label>
+          <input type="text" id="set-tel" value="089-XXX XXX" placeholder="No. telefon">
+        </div>
+        <div class="field">
+          <label>No. Faks</label>
+          <input type="text" id="set-faks" value="089-XXX XXX" placeholder="No. faks">
+        </div>
+        <div class="field">
+          <label>Emel Sekolah</label>
+          <input type="text" id="set-emel" value="" placeholder="Contoh: skk@moe-dl.edu.my">
+        </div>
+        <div class="field">
+          <label>Nama Penyedia Laporan</label>
+          <input type="text" id="set-penyedia" placeholder="Nama guru / penyedia">
+        </div>
+        <div class="field">
+          <label>Jawatan Penyedia</label>
+          <input type="text" id="set-jawatan-penyedia" placeholder="Contoh: Guru Biasa">
+        </div>
+        <div class="field">
+          <label>Nama Pengesah (GB/PK)</label>
+          <input type="text" id="set-pengesah" placeholder="Nama Guru Besar / PK">
+        </div>
+        <div class="field">
+          <label>Jawatan Pengesah</label>
+          <input type="text" id="set-jawatan-pengesah" value="Guru Besar" placeholder="Contoh: Guru Besar">
+        </div>
+      </div>
+      <div class="field">
+        <label>Logo Institusi Anda (dipaparkan dalam janaan pdf sahaja)</label>
+        <label class="logo-upload-zone" for="logo-upload-input">
+          <img id="logo-preview-settings" src="https://drive.google.com/thumbnail?id=1RyaPhoYnmA4p0uzgiutPEkTw6uL7kfVY&sz=w200" class="logo-preview" onerror="this.style.display='none'">
+          <div>Klik untuk muat naik logo sekolah</div>
+          <input type="file" id="logo-upload-input" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card">
+
+    <div class="section-title">Maklumat Asas Program</div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <label>Nama Program / Aktiviti</label>
+      <input type="text" id="nama_program" placeholder="Contoh: Program Literasi Murid Tahun 3">
+    </div>
+
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Anjuran</label>
+        <input type="text" id="anjuran" placeholder="Contoh: Panitia Bahasa Melayu">
+      </div>
+      <div class="field">
+        <label>Tempat</label>
+        <input type="text" id="tempat" placeholder="Contoh: Dewan SK Kiandongo">
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Tarikh</label>
+        <input type="date" id="tarikh">
+      </div>
+      <div class="field">
+        <label>Masa Mula</label>
+        <input type="time" id="masa_mula">
+      </div>
+      <div class="field">
+        <label>Masa Tamat</label>
+        <input type="time" id="masa_tamat">
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:6px;">
+      <label>Sasaran Peserta</label>
+      <input type="text" id="sasaran" placeholder="Contoh: Murid Tahap 1 (Tahun 1 - 3), seramai 45 orang">
+    </div>
+
+    <div class="section-title">Isi Kandungan Laporan</div>
+
+    <div class="ai-banner">
+      <span>✨</span>
+      <span><strong>Ciri AI Tersedia!</strong> Klik butang <strong>✨ Jana AI</strong> di sebelah label untuk menjana kandungan secara automatik berdasarkan maklumat program yang anda isi. <strong>Anda juga boleh mengisi semua medan secara manual</strong> tanpa menggunakan AI — taip terus dalam ruangan yang disediakan.</span>
+    </div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <div class="field-header">
+        <label>Objektif</label>
+        <button class="btn-ai" id="btn-ai-objektif" onclick="janaAI('objektif')" type="button">
+          <span class="ai-icon">✨</span> Jana AI
+        </button>
+      </div>
+      <textarea id="objektif" placeholder="Nyatakan objektif program / aktiviti ini... atau klik ✨ Jana AI"></textarea>
+    </div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <div class="field-header">
+        <label>Aktiviti yang Dijalankan</label>
+        <button class="btn-ai" id="btn-ai-aktiviti" onclick="janaAI('aktiviti')" type="button">
+          <span class="ai-icon">✨</span> Jana AI
+        </button>
+      </div>
+      <textarea id="aktiviti" placeholder="Huraikan aktiviti-aktiviti yang dijalankan... atau klik ✨ Jana AI"></textarea>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:6px;">
+      <div class="field">
+        <div class="field-header">
+          <label>Kekuatan</label>
+          <button class="btn-ai" id="btn-ai-kekuatan" onclick="janaAI('kekuatan')" type="button">
+            <span class="ai-icon">✨</span> Jana AI
+          </button>
+        </div>
+        <textarea id="kekuatan" placeholder="Nyatakan kekuatan program... atau klik ✨ Jana AI"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Kelemahan / Cadangan</label>
+          <button class="btn-ai" id="btn-ai-kelemahan" onclick="janaAI('kelemahan')" type="button">
+            <span class="ai-icon">✨</span> Jana AI
+          </button>
+        </div>
+        <textarea id="kelemahan" placeholder="Nyatakan kelemahan & cadangan... atau klik ✨ Jana AI"></textarea>
+      </div>
+    </div>
+
+    <div class="section-title">Gambar Program</div>
+
+    <label class="upload-zone" for="img-input">
+      <span class="upload-icon">📷</span>
+      <h3>Klik untuk Muat Naik Gambar</h3>
+      <p>Maksimum 6 keping gambar (JPG, PNG, WEBP)</p>
+      <input type="file" id="img-input" accept="image/*" multiple>
+    </label>
+
+    <div id="img-preview-grid" class="image-preview-grid" style="display:none;"></div>
+    <div id="img-count" style="text-align:center;"></div>
+
+    <!-- GENERATE BUTTON -->
+    <button class="btn-generate" id="btn-generate" onclick="generatePDF()">
+      📄 JANA PDF
+    </button>
+
+    <div id="status-msg"></div>
+
+  </div>
+  <!-- /FORM CARD -->
+
+  <div class="app-footer">SK Kiandongo &mdash; SmartOPR &copy; 2025</div>
+</div>
+
+<!-- POPUP CIRI 4 -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box">
+    <div class="popup-logo">📄✨</div>
+    <div class="popup-title">SmartOPR</div>
+    <div class="popup-credit">Created for you for free by</div>
+    <div class="popup-handle">@StingingPolyphony</div>
+    <button class="popup-btn" onclick="closePopupAndDownload()">📥 MUAT TURUN PDF</button>
+  </div>
+</div>
+
+<!-- ===== HIDDEN PDF TEMPLATE ===== -->
+<div id="pdf-template">
+  <div class="pdf-page" id="pdf-page">
+    <div class="pdf-content">
+
+      <!-- PDF Header -->
+      <div class="pdf-header">
+        <img id="pdf-logo-l" src="https://drive.google.com/thumbnail?id=1RyaPhoYnmA4p0uzgiutPEkTw6uL7kfVY&sz=w200" class="pdf-logo" crossorigin="anonymous">
+        <div class="pdf-header-center">
+          <div class="pdf-kementerian">Kementerian Pendidikan Malaysia</div>
+          <div class="pdf-school-name" id="pdf-school-name-el">SEKOLAH KEBANGSAAN KIANDONGO</div>
+          <div class="pdf-school-address" id="pdf-school-address-el">
+            89108 Sabah, Malaysia<br>
+            Tel: 089-XXX XXX &nbsp;|&nbsp; Faks: 089-XXX XXX
+          </div>
+        </div>
+        <img id="pdf-logo-r" src="https://drive.google.com/thumbnail?id=1RyaPhoYnmA4p0uzgiutPEkTw6uL7kfVY&sz=w200" class="pdf-logo" crossorigin="anonymous">
+      </div>
+
+      <hr class="pdf-header-divider">
+
+      <div class="pdf-report-title-bar">LAPORAN ONE PAGE REPORT (OPR)</div>
+
+      <!-- Main Table -->
+      <table class="pdf-table">
+        <!-- Section: Maklumat Asas -->
+        <tr class="pdf-section-header">
+          <td colspan="4">A. MAKLUMAT ASAS PROGRAM / AKTIVITI</td>
+        </tr>
+        <tr>
+          <td class="label-cell">Nama Program / Aktiviti</td>
+          <td class="value-cell" id="pdf-nama_program" colspan="3" style="font-weight:700;"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Anjuran</td>
+          <td class="value-cell" id="pdf-anjuran"></td>
+          <td class="label-cell" style="text-align:right;">Tempat</td>
+          <td class="value-cell" id="pdf-tempat"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Tarikh</td>
+          <td class="value-cell" id="pdf-tarikh"></td>
+          <td class="label-cell" style="text-align:right;">Masa</td>
+          <td class="value-cell" id="pdf-masa"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Sasaran Peserta</td>
+          <td class="value-cell" id="pdf-sasaran" colspan="3"></td>
+        </tr>
+
+        <!-- Section: Objektif -->
+        <tr class="pdf-section-header">
+          <td colspan="4">B. OBJEKTIF PROGRAM</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="full-width" id="pdf-objektif" style="min-height:50px;"></td>
+        </tr>
+
+        <!-- Section: Aktiviti -->
+        <tr class="pdf-section-header">
+          <td colspan="4">C. AKTIVITI YANG DIJALANKAN</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="full-width" id="pdf-aktiviti" style="min-height:60px;"></td>
+        </tr>
+
+        <!-- Section: Kekuatan & Kelemahan -->
+        <tr class="pdf-section-header">
+          <td colspan="2">D. KEKUATAN</td>
+          <td colspan="2" style="background:#1a3d7c;color:#c8a84b;font-weight:700;text-align:center;letter-spacing:1px;font-size:9px;text-transform:uppercase;padding:5px 8px;">E. KELEMAHAN / CADANGAN PENAMBAHBAIKAN</td>
+        </tr>
+        <tr>
+          <td colspan="2" id="pdf-kekuatan" style="vertical-align:top;min-height:60px;"></td>
+          <td colspan="2" id="pdf-kelemahan" style="vertical-align:top;min-height:60px;"></td>
+        </tr>
+      </table>
+
+      <!-- Images section -->
+      <div id="pdf-images-section" style="display:none;">
+        <div class="pdf-images-title">F. DOKUMENTASI GAMBAR PROGRAM</div>
+        <div class="pdf-images-grid" id="pdf-images-grid"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="pdf-footer">
+        <div class="pdf-signature-block">
+          <div class="pdf-signature-line"></div>
+          <div><strong>Disediakan Oleh:</strong></div>
+          <div id="pdf-penyedia-name" style="margin-top:2px;">____________________</div>
+          <div id="pdf-penyedia-jawatan" style="font-size:7.5px;">____________________</div>
+          <div>Tarikh: ____________________</div>
+        </div>
+        <div class="pdf-footer-center">
+          Laporan ini dijana secara automatik oleh SmartOPR SK Kiandongo<br>
+          <span id="pdf-gen-date"></span>
+        </div>
+        <div class="pdf-signature-block">
+          <div class="pdf-signature-line"></div>
+          <div><strong>Disahkan Oleh:</strong></div>
+          <div id="pdf-pengesah-name" style="margin-top:2px;">____________________</div>
+          <div id="pdf-pengesah-jawatan" style="font-size:7.5px;">Guru Besar</div>
+          <div>Tarikh: ____________________</div>
+        </div>
+      </div>
+
+    </div><!-- /pdf-content -->
+  </div><!-- /pdf-page -->
+</div><!-- /pdf-template -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ===== AI GENERATION =====
+async function janaAI(field) {
+  const namaProgram = document.getElementById('nama_program').value.trim();
+  const anjuran = document.getElementById('anjuran').value.trim();
+  const sasaran = document.getElementById('sasaran').value.trim();
+  const tempat = document.getElementById('tempat').value.trim();
+  const objektifSedia = document.getElementById('objektif').value.trim();
+  const aktivitiSedia = document.getElementById('aktiviti').value.trim();
+
+  if (!namaProgram) {
+    showStatus('⚠ Sila isi Nama Program / Aktiviti terlebih dahulu sebelum menggunakan ciri AI.', 'error');
+    document.getElementById('nama_program').focus();
+    return;
+  }
+
+  const btnId = `btn-ai-${field}`;
+  const btn = document.getElementById(btnId);
+  const textarea = document.getElementById(field);
+
+  // Set loading state
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:2px;margin-right:5px;"></span> Menjana...';
+  textarea.classList.add('ai-generating');
+  textarea.value = '';
+  textarea.placeholder = '✨ AI sedang menjana kandungan...';
+  hideStatus();
+
+  const konteks = `
+Nama Program / Aktiviti: ${namaProgram}
+Anjuran: ${anjuran || 'Tidak dinyatakan'}
+Sasaran Peserta: ${sasaran || 'Tidak dinyatakan'}
+Tempat: ${tempat || 'Tidak dinyatakan'}
+${objektifSedia ? 'Objektif (sedia ada): ' + objektifSedia : ''}
+${aktivitiSedia ? 'Aktiviti (sedia ada): ' + aktivitiSedia : ''}
+  `.trim();
+
+  const prompts = {
+    objektif: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan OBJEKTIF program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal dan tepat. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 5 objektif. Pastikan objektif bermula dengan kata kerja yang sesuai (meningkatkan, memupuk, memberi, mendedahkan, dsb). HANYA tulis objektif sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    aktiviti: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan AKTIVITI YANG DIJALANKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 4 hingga 6 aktiviti yang logik dan sesuai dengan konteks program. HANYA tulis senarai aktiviti sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    kekuatan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KEKUATAN program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 4 kekuatan yang spesifik dan relevan. HANYA tulis kekuatan sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    kelemahan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KELEMAHAN DAN CADANGAN PENAMBAHBAIKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 2 hingga 3 kelemahan beserta cadangan penambahbaikan yang konstruktif. HANYA tulis kelemahan dan cadangan sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`
+  };
+
+  // ⚙️ URL Cloudflare Worker anda (DeepSeek) — gantikan selepas deploy
+  const WORKER_URL = 'https://smartopr-ai-v2.g-95272556.workers.dev';
+
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompts[field] }]
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error('HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    // Handle error from worker
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    // Extract text - support both DeepSeek and Claude response formats
+    let result = '';
+    if (data.content && Array.isArray(data.content)) {
+      result = data.content[0]?.text || data.content.find(b => b.type === 'text')?.text || '';
+    } else if (data.choices && Array.isArray(data.choices)) {
+      result = data.choices[0]?.message?.content || '';
+    }
+
+    if (result) {
+      textarea.value = result.trim();
+      showStatus(`✅ Kandungan ${field} berjaya dijana oleh AI! Anda boleh edit jika perlu.`, 'success');
+    } else {
+      throw new Error('Tiada kandungan dijana. Cuba semula.');
+    }
+  } catch (err) {
+    console.error(err);
+    showStatus('❌ Ralat AI: ' + err.message + '. Pastikan WORKER_URL sudah dikemaskini dalam fail HTML.', 'error');
+    textarea.placeholder = 'Sila cuba semula atau taip secara manual...';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="ai-icon">✨</span> Jana AI';
+    textarea.classList.remove('ai-generating');
+  }
+}
+
+// ===== IMAGE UPLOAD =====
+const imgInput = document.getElementById('img-input');
+const imgPreviewGrid = document.getElementById('img-preview-grid');
+const imgCount = document.getElementById('img-count');
+let uploadedImages = []; // {dataUrl, file}
+
+imgInput.addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  const remaining = 6 - uploadedImages.length;
+  const toAdd = files.slice(0, remaining);
+
+  if (files.length > remaining) {
+    showStatus(`Hanya ${remaining} lagi gambar yang boleh dimuat naik (maksimum 6).`, 'error');
+  }
+
+  toAdd.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      uploadedImages.push({ dataUrl: ev.target.result, file });
+      renderPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Reset input so same files can be re-selected if needed
+  e.target.value = '';
+});
+
+function renderPreviews() {
+  imgPreviewGrid.innerHTML = '';
+  imgPreviewGrid.style.display = uploadedImages.length > 0 ? 'grid' : 'none';
+
+  uploadedImages.forEach((img, idx) => {
+    const item = document.createElement('div');
+    item.className = 'preview-item';
+    item.innerHTML = `<img src="${img.dataUrl}" alt="Gambar ${idx+1}">
+      <button class="remove-btn" onclick="removeImage(${idx})" title="Buang gambar">✕</button>`;
+    imgPreviewGrid.appendChild(item);
+  });
+
+  if (uploadedImages.length > 0) {
+    imgCount.innerHTML = `<span class="img-count-badge">${uploadedImages.length} / 6 gambar dimuat naik</span>`;
+  } else {
+    imgCount.innerHTML = '';
+  }
+}
+
+function removeImage(idx) {
+  uploadedImages.splice(idx, 1);
+  renderPreviews();
+}
+
+// ===== STATUS =====
+function showStatus(msg, type) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg;
+  el.className = type;
+  el.style.display = 'block';
+}
+
+function hideStatus() {
+  const el = document.getElementById('status-msg');
+  el.style.display = 'none';
+}
+
+// ===== FORMAT HELPERS =====
+function formatTarikh(val) {
+  if (!val) return '';
+  const d = new Date(val);
+  const days = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+  const months = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function formatMasa(val) {
+  if (!val) return '';
+  const [h, m] = val.split(':');
+  const hour = parseInt(h);
+  const suffix = hour < 12 ? 'pagi' : hour < 17 ? 'petang' : 'malam';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${m} ${suffix}`;
+}
+
+function formatTextToHtml(text) {
+  if (!text) return '<em style="color:#999;">-</em>';
+  // Convert newlines to <br>
+  return text.replace(/\n/g, '<br>');
+}
+
+// ===== GENERATE PDF =====
+async function generatePDF() {
+  hideStatus();
+
+  // Gather values
+  const fields = {
+    nama_program: document.getElementById('nama_program').value.trim(),
+    anjuran: document.getElementById('anjuran').value.trim(),
+    tarikh: document.getElementById('tarikh').value,
+    masa_mula: document.getElementById('masa_mula').value,
+    masa_tamat: document.getElementById('masa_tamat').value,
+    tempat: document.getElementById('tempat').value.trim(),
+    sasaran: document.getElementById('sasaran').value.trim(),
+    objektif: document.getElementById('objektif').value.trim(),
+    aktiviti: document.getElementById('aktiviti').value.trim(),
+    kekuatan: document.getElementById('kekuatan').value.trim(),
+    kelemahan: document.getElementById('kelemahan').value.trim(),
+  };
+
+  // Validate required
+  if (!fields.nama_program) {
+    showStatus('⚠ Sila masukkan Nama Program / Aktiviti.', 'error');
+    document.getElementById('nama_program').focus();
+    return;
+  }
+
+  // Populate PDF template
+  document.getElementById('pdf-nama_program').innerHTML = fields.nama_program;
+  document.getElementById('pdf-anjuran').innerHTML = fields.anjuran || '-';
+  document.getElementById('pdf-tarikh').innerHTML = formatTarikh(fields.tarikh) || '-';
+  
+  let masaStr = '';
+  if (fields.masa_mula && fields.masa_tamat) masaStr = `${formatMasa(fields.masa_mula)} – ${formatMasa(fields.masa_tamat)}`;
+  else if (fields.masa_mula) masaStr = formatMasa(fields.masa_mula);
+  else masaStr = '-';
+  document.getElementById('pdf-masa').innerHTML = masaStr;
+  
+  document.getElementById('pdf-tempat').innerHTML = fields.tempat || '-';
+  document.getElementById('pdf-sasaran').innerHTML = fields.sasaran || '-';
+  document.getElementById('pdf-objektif').innerHTML = formatTextToHtml(fields.objektif);
+  document.getElementById('pdf-aktiviti').innerHTML = formatTextToHtml(fields.aktiviti);
+  document.getElementById('pdf-kekuatan').innerHTML = formatTextToHtml(fields.kekuatan);
+  document.getElementById('pdf-kelemahan').innerHTML = formatTextToHtml(fields.kelemahan);
+
+  // Date generated
+  const now = new Date();
+  document.getElementById('pdf-gen-date').textContent = 
+    `Dijana pada: ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // Images
+  const imagesSection = document.getElementById('pdf-images-section');
+  const imagesGrid = document.getElementById('pdf-images-grid');
+  
+  if (uploadedImages.length > 0) {
+    imagesSection.style.display = 'block';
+    imagesGrid.innerHTML = '';
+    // Always create 6 cells
+    for (let i = 0; i < 6; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'pdf-img-cell';
+      if (uploadedImages[i]) {
+        cell.innerHTML = `<img src="${uploadedImages[i].dataUrl}" alt="Gambar ${i+1}">`;
+      } else {
+        cell.style.background = '#f0f0f0';
+        cell.style.border = '1px dashed #ccc';
+      }
+      imagesGrid.appendChild(cell);
+    }
+  } else {
+    imagesSection.style.display = 'none';
+  }
+
+  // Disable button, show loading
+  const btn = document.getElementById('btn-generate');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menjana PDF...';
+  showStatus('Sedang menjana laporan PDF, sila tunggu...', 'info');
+
+  // Update school info BEFORE canvas generation
+  const namaSekolah = document.getElementById('set-nama-sekolah')?.value || 'SEKOLAH KEBANGSAAN KIANDONGO';
+  const alamat = document.getElementById('set-alamat')?.value || '89108 Sabah, Malaysia';
+  const tel = document.getElementById('set-tel')?.value || '089-XXX XXX';
+  const faks = document.getElementById('set-faks')?.value || '089-XXX XXX';
+  const penyedia = document.getElementById('set-penyedia')?.value || '';
+  const jawatanPenyedia = document.getElementById('set-jawatan-penyedia')?.value || '';
+  const pengesah = document.getElementById('set-pengesah')?.value || '';
+  const jawatanPengesah = document.getElementById('set-jawatan-pengesah')?.value || 'Guru Besar';
+
+  const nameEl = document.getElementById('pdf-school-name-el');
+  const addrEl = document.getElementById('pdf-school-address-el');
+  if (nameEl) nameEl.textContent = namaSekolah.toUpperCase();
+  const emel = document.getElementById('set-emel')?.value || '';
+  if (addrEl) addrEl.innerHTML = alamat + '<br>Tel: ' + tel + ' &nbsp;|&nbsp; Faks: ' + faks + (emel ? '<br>Emel: ' + emel : '');
+
+  const penyediaEl = document.getElementById('pdf-penyedia-name');
+  const penyediaJwt = document.getElementById('pdf-penyedia-jawatan');
+  const pengesahEl = document.getElementById('pdf-pengesah-name');
+  const pengesahJwt = document.getElementById('pdf-pengesah-jawatan');
+  if (penyediaEl) penyediaEl.textContent = penyedia || '____________________';
+  if (penyediaJwt) penyediaJwt.textContent = jawatanPenyedia || '____________________';
+  if (pengesahEl) pengesahEl.textContent = pengesah || '____________________';
+  if (pengesahJwt) pengesahJwt.textContent = jawatanPengesah;
+
+  if (customLogoDataUrl) {
+    document.getElementById('pdf-logo-l').src = customLogoDataUrl;
+    document.getElementById('pdf-logo-r').src = customLogoDataUrl;
+  }
+
+  // Wait for DOM render
+  await new Promise(r => setTimeout(r, 800));
+
+  // Declare outside try so accessible for popup
+  let pdf, filename;
+
+  try {
+    const pdfPage = document.getElementById('pdf-page');
+    
+    const canvas = await html2canvas(pdfPage, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: 794,
+      windowWidth: 794,
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const { jsPDF } = window.jspdf;
+    pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const canvasRatio = canvas.height / canvas.width;
+    const imgHeightInPdf = pdfWidth * canvasRatio;
+
+    if (imgHeightInPdf <= pdfHeight) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgHeightInPdf);
+    } else {
+      const scaledWidth = pdfHeight / canvasRatio;
+      const offsetX = (pdfWidth - scaledWidth) / 2;
+      pdf.addImage(imgData, 'JPEG', offsetX, 0, scaledWidth, pdfHeight);
+    }
+
+    filename = 'Laporan_OPR_' + fields.nama_program.replace(/[^a-zA-Z0-9 ]/g,'').replace(/ +/g,'_') + '_' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '.pdf';
+
+  } catch (err) {
+    console.error(err);
+    showStatus('❌ Ralat semasa menjana PDF: ' + err.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = '📄 JANA PDF';
+    return;
+  }
+
+  // Show popup CIRI 4
+  window._pendingPdfDownload = { pdf, filename };
+  document.getElementById('popup-overlay').classList.add('show');
+
+  btn.disabled = false;
+  btn.innerHTML = '📄 JANA PDF';
+}
+
+// ===== POPUP FUNCTIONS =====
+function closePopupAndDownload() {
+  document.getElementById('popup-overlay').classList.remove('show');
+  if (window._pendingPdfDownload) {
+    const { pdf, filename } = window._pendingPdfDownload;
+    pdf.save(filename);
+    window._pendingPdfDownload = null;
+    showStatus('✅ PDF berjaya dijana dan dimuat turun!', 'success');
+  }
+}
+
+// ===== SETTINGS PANEL =====
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  const arrow = document.getElementById('settings-arrow');
+  panel.classList.toggle('open');
+  arrow.textContent = panel.classList.contains('open') ? '▲' : '▼';
+}
+
+// ===== LOGO UPLOAD =====
+let customLogoDataUrl = null;
+
+function handleLogoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    customLogoDataUrl = ev.target.result;
+    // Hanya update preview dalam settings — BUKAN header app
+    document.getElementById('logo-preview-settings').src = customLogoDataUrl;
+  };
+  reader.readAsDataURL(file);
+}
+
+</script>
+</body>
+</html>
