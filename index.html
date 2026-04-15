@@ -165,48 +165,54 @@
   }
 
   /* ===== IMAGE UPLOAD ===== */
-  .upload-zone {
-    border: 2px dashed var(--gold);
+  .upload-btn-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    padding: 18px;
+    background: #f0f7ff;
+    border: 2px dashed #5b9bd5;
     border-radius: 12px;
-    background: #fffdf5;
-    padding: 28px;
-    text-align: center;
+  }
+  .btn-camera {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 24px;
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(46,125,50,0.35);
   }
-
-  .upload-zone:hover {
-    background: #fff8e5;
-    border-color: var(--navy);
+  .btn-camera:hover {
+    background: linear-gradient(135deg, #1b5e20, #2e7d32);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(46,125,50,0.45);
   }
-
-  .upload-zone input { display: none; }
-
-  .upload-icon {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    display: block;
-  }
-
-  .upload-zone h3 {
-    font-size: 1rem;
-    color: var(--navy);
+  .btn-camera span { font-size: 1.3rem; }
+  .upload-hint {
+    font-size: 0.78rem;
+    color: #5b9bd5;
     font-weight: 600;
-  }
-
-  .upload-zone p {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-top: 4px;
   }
 
   .image-preview-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 14px;
+    min-height: 0;
   }
+  .image-preview-grid:empty { display: none; }
 
   .preview-item {
     position: relative;
@@ -863,15 +869,16 @@
 
     <div class="section-title">Gambar Program</div>
 
-    <label class="upload-zone" for="img-input">
-      <span class="upload-icon">📷</span>
-      <h3>Klik untuk Muat Naik Gambar</h3>
-      <p>Maksimum 6 keping gambar (JPG, PNG, WEBP)</p>
-      <input type="file" id="img-input" accept="image/*" multiple>
-    </label>
+    <div class="upload-btn-row">
+      <button class="btn-camera" onclick="document.getElementById('img-input').click()" type="button">
+        <span>📷</span> Muat Naik Gambar
+      </button>
+      <span class="upload-hint">Maksimum 6 keping (JPG, PNG, WEBP)</span>
+      <input type="file" id="img-input" accept="image/*" multiple style="display:none">
+    </div>
 
-    <div id="img-preview-grid" class="image-preview-grid" style="display:none;"></div>
-    <div id="img-count" style="text-align:center;"></div>
+    <div id="img-preview-grid" class="image-preview-grid"></div>
+    <div id="img-count" style="text-align:center;margin-top:8px;"></div>
 
     <!-- GENERATE BUTTON -->
     <button class="btn-generate" id="btn-generate" onclick="generatePDF()">
@@ -883,7 +890,7 @@
   </div>
   <!-- /FORM CARD -->
 
-  <div class="app-footer">SK Kiandongo &mdash; SmartOPR &copy; 2025</div>
+  <div class="app-footer">SK Kiandongo &mdash; SmartOPR &copy; 2026</div>
 </div>
 
 <!-- POPUP CIRI 4 -->
@@ -1144,7 +1151,7 @@ imgInput.addEventListener('change', function(e) {
 
 function renderPreviews() {
   imgPreviewGrid.innerHTML = '';
-  imgPreviewGrid.style.display = uploadedImages.length > 0 ? 'grid' : 'none';
+  imgPreviewGrid.style.display = uploadedImages.length > 0 ? 'grid' : '';
 
   uploadedImages.forEach((img, idx) => {
     const item = document.createElement('div');
@@ -1221,6 +1228,24 @@ async function generatePDF() {
     kekuatan: document.getElementById('kekuatan').value.trim(),
     kelemahan: document.getElementById('kelemahan').value.trim(),
   };
+
+  // Validate tetapan sekolah dahulu
+  const namaSekolahCheck = document.getElementById('set-nama-sekolah')?.value.trim();
+  const penyediaCheck = document.getElementById('set-penyedia')?.value.trim();
+  const pengesahCheck = document.getElementById('set-pengesah')?.value.trim();
+
+  if (!namaSekolahCheck || !penyediaCheck || !pengesahCheck) {
+    showStatus('⚠ Sila lengkapkan Tetapan Sekolah dahulu — Nama Sekolah, Nama Penyedia dan Nama Pengesah wajib diisi.', 'error');
+    // Buka settings panel
+    const panel = document.getElementById('settings-panel');
+    const arrow = document.getElementById('settings-arrow');
+    if (!panel.classList.contains('open')) {
+      panel.classList.add('open');
+      arrow.textContent = '▲';
+    }
+    panel.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
 
   // Validate required
   if (!fields.nama_program) {
