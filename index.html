@@ -783,19 +783,19 @@
       <div class="settings-grid" style="margin-bottom:12px;">
         <div class="field">
           <label>Nama Institusi</label>
-          <input type="text" id="set-nama-sekolah" value="" placeholder="Nama institusi">
+          <input type="text" id="set-nama-sekolah" value="SEKOLAH KEBANGSAAN KIANDONGO" placeholder="Nama institusi">
         </div>
         <div class="field">
           <label>Alamat Institusi</label>
-          <input type="text" id="set-alamat" value="" placeholder="Alamat institusi">
+          <input type="text" id="set-alamat" value="89108 Sabah, Malaysia" placeholder="Alamat institusi">
         </div>
         <div class="field">
           <label>No. Telefon</label>
-          <input type="text" id="set-tel" value="" placeholder="No. telefon">
+          <input type="text" id="set-tel" value="089-XXX XXX" placeholder="No. telefon">
         </div>
         <div class="field">
           <label>No. Faks</label>
-          <input type="text" id="set-faks" value="" placeholder="No. faks">
+          <input type="text" id="set-faks" value="089-XXX XXX" placeholder="No. faks">
         </div>
         <div class="field">
           <label>Emel Institusi</label>
@@ -807,15 +807,15 @@
         </div>
         <div class="field">
           <label>Jawatan Penyedia</label>
-          <input type="text" id="set-jawatan-penyedia" placeholder="Contoh: GAB">
+          <input type="text" id="set-jawatan-penyedia" placeholder="Contoh: Guru Biasa">
         </div>
         <div class="field">
           <label>Nama Pengesah</label>
-          <input type="text" id="set-pengesah" placeholder="Nama Guru Besar/Pengetua/PK">
+          <input type="text" id="set-pengesah" placeholder="Nama Guru Besar / PK">
         </div>
         <div class="field">
           <label>Jawatan Pengesah</label>
-          <input type="text" id="set-jawatan-pengesah" value="" placeholder="Contoh: Guru Besar">
+          <input type="text" id="set-jawatan-pengesah" value="Guru Besar" placeholder="Contoh: Guru Besar">
         </div>
       </div>
       <div class="field">
@@ -1429,6 +1429,30 @@ async function generatePDF() {
   try {
     const pdfPage = document.getElementById('pdf-page');
     
+    // Pre-load semua imej sebelum render (fix Android)
+    const allImgs = pdfPage.querySelectorAll('img');
+    await Promise.all(Array.from(allImgs).map(img => {
+      return new Promise(resolve => {
+        if (img.complete) { resolve(); return; }
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    }));
+
+    // Tukar semua imej dalam PDF kepada blob URL (fix Android CORS)
+    const imgEls = pdfPage.querySelectorAll('img');
+    for (const img of imgEls) {
+      if (img.src && img.src.startsWith('data:')) continue;
+      try {
+        const resp = await fetch(img.src);
+        const blob = await resp.blob();
+        img.src = URL.createObjectURL(blob);
+        await new Promise(r => setTimeout(r, 50));
+      } catch(e) {}
+    }
+
+    await new Promise(r => setTimeout(r, 300));
+
     const canvas = await html2canvas(pdfPage, {
       scale: 2,
       useCORS: true,
@@ -1437,6 +1461,14 @@ async function generatePDF() {
       logging: false,
       width: 794,
       windowWidth: 794,
+      imageTimeout: 15000,
+      onclone: function(clonedDoc) {
+        // Pastikan semua imej visible dalam clone
+        clonedDoc.querySelectorAll('img').forEach(img => {
+          img.style.display = 'block';
+          img.style.visibility = 'visible';
+        });
+      }
     });
 
     const imgData = canvas.toDataURL('image/jpeg', 0.92);
