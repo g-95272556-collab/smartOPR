@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan OPR SK Kiandongo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+  :root {
+    --navy: #0a2351;
+    --gold: #c8a84b;
+    --gold-light: #f0d98c;
+    --cream: #faf8f3;
+    --white: #ffffff;
+    --border: #d0c9b8;
+    --text: #1a1a2e;
+    --muted: #5a5a7a;
+    --accent: #1a3d7c;
+    --success: #2e7d32;
+    --danger: #c62828;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: linear-gradient(135deg, #0a1628 0%, #1a3d7c 50%, #0a2351 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: var(--text);
+  }
+
+  /* ===== APP WRAPPER ===== */
+  .app-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ===== APP HEADER ===== */
+  .app-header {
+    background: var(--navy);
+    border-radius: 16px 16px 0 0;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .header-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(200,168,75,0.4));
+  }
+
+  .header-center {
+    text-align: center;
+    flex: 1;
+    padding: 0 20px;
+  }
+
+  .header-center h1 {
+    font-family: 'Merriweather', serif;
+    color: var(--gold);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    line-height: 1.3;
+  }
+
+  .header-center p {
+    color: #a0b4d4;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ===== FORM CARD ===== */
+  .form-card {
+    background: var(--cream);
+    padding: 36px 40px;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  }
+
+  .section-title {
+    font-family: 'Merriweather', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 28px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title:first-of-type { margin-top: 0; }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  /* ===== GRID ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 640px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .app-header { flex-direction: column; gap: 12px; text-align: center; }
+    .form-card { padding: 24px 18px; }
+  }
+
+  /* ===== FORM FIELDS ===== */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(10,35,81,0.12);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.6;
+  }
+
+  /* ===== IMAGE UPLOAD ===== */
+  .upload-btn-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    padding: 18px;
+    background: #f0f7ff;
+    border: 2px dashed #5b9bd5;
+    border-radius: 12px;
+  }
+  .btn-camera {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 24px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(46,125,50,0.35);
+  }
+  .btn-camera:hover {
+    background: linear-gradient(135deg, #1b5e20, #2e7d32);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(46,125,50,0.45);
+  }
+  .btn-camera span { font-size: 1.3rem; }
+  .upload-hint {
+    font-size: 0.78rem;
+    color: #5b9bd5;
+    font-weight: 600;
+  }
+
+  .image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 14px;
+    min-height: 0;
+  }
+  .image-preview-grid:empty { display: none; }
+
+  .preview-item {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    background: #eee;
+  }
+
+  .preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .preview-item .remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(198,40,40,0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  .img-count-badge {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+
+  /* ===== BUTTON ===== */
+  .btn-generate {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin-top: 32px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--accent) 100%);
+    color: var(--gold);
+    font-family: 'Merriweather', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(10,35,81,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-generate::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(200,168,75,0.15), transparent);
+    transition: left 0.4s;
+  }
+
+  .btn-generate:hover::before { left: 100%; }
+  .btn-generate:hover {
+    background: linear-gradient(135deg, #1a3d7c, #0d5299);
+    box-shadow: 0 6px 24px rgba(10,35,81,0.6);
+    transform: translateY(-1px);
+  }
+
+  .btn-generate:active { transform: translateY(0); }
+
+  .btn-generate:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ===== STATUS MESSAGE ===== */
+  #status-msg {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+  #status-msg.info { background: #e3f2fd; color: #1565c0; display: block; }
+  #status-msg.error { background: #ffebee; color: var(--danger); display: block; }
+  #status-msg.success { background: #e8f5e9; color: var(--success); display: block; }
+
+  /* ===== PDF TEMPLATE (hidden) ===== */
+  #pdf-template {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    width: 794px;
+    background: white;
+    font-family: 'Source Sans 3', Arial, sans-serif;
+    z-index: -1;
+  }
+
+  /* PDF styles */
+  .pdf-page {
+    width: 794px;
+    min-height: 1123px;
+    padding: 36px 44px;
+    background: white;
+    position: relative;
+  }
+
+  .pdf-watermark-line {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    font-weight: 900;
+    color: #0a2351;
+    transform: rotate(-30deg);
+    font-family: 'Merriweather', serif;
+  }
+
+  .pdf-content { position: relative; z-index: 1; }
+
+  /* PDF Header */
+  .pdf-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .pdf-logo {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+  }
+
+  .pdf-header-center {
+    text-align: center;
+    flex: 1;
+    padding: 0 14px;
+  }
+
+  .pdf-kementerian {
+    font-size: 8px;
+    color: #555;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1px;
+  }
+
+  .pdf-school-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0a2351;
+    font-family: 'Merriweather', Georgia, serif;
+    line-height: 1.2;
+  }
+
+  .pdf-school-address {
+    font-size: 8.5px;
+    color: #444;
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+
+  .pdf-header-divider {
+    border: none;
+    border-top: 3px solid #0a2351;
+    border-bottom: 1px solid #c8a84b;
+    margin: 6px 0;
+  }
+
+  .pdf-report-title-bar {
+    background: #0a2351;
+    color: #c8a84b;
+    text-align: center;
+    padding: 8px;
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* PDF Table */
+  .pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 9.5px;
+  }
+
+  .pdf-table td {
+    border: 1px solid #b0b8c8;
+    padding: 5px 8px;
+    vertical-align: top;
+    line-height: 1.5;
+    color: #1a1a2e;
+  }
+
+  .pdf-table .label-cell {
+    background: #eef2fa;
+    font-weight: 700;
+    color: #0a2351;
+    width: 28%;
+    white-space: nowrap;
+  }
+
+  .pdf-table .value-cell {
+    background: white;
+    width: 22%;
+  }
+
+  .pdf-section-header td {
+    background: #1a3d7c;
+    color: #c8a84b;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 5px 8px;
+  }
+
+  .pdf-table .full-width {
+    width: 100%;
+  }
+
+  /* Images Grid */
+  .pdf-images-title {
+    background: #1a3d7c;
+    color: #c8a84b;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 9px;
+    text-transform: uppercase;
+    padding: 5px 8px;
+    border: 1px solid #b0b8c8;
+    margin-bottom: 0;
+  }
+
+  .pdf-images-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    padding: 6px;
+    border: 1px solid #b0b8c8;
+    border-top: none;
+    background: #f8f8f8;
+    margin-bottom: 10px;
+  }
+
+  .pdf-img-cell {
+    aspect-ratio: 4/3;
+    background: #ddd;
+    overflow: hidden;
+    border: 1px solid #ccc;
+  }
+
+  .pdf-img-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* PDF Footer */
+  .pdf-footer {
+    margin-top: 10px;
+    border-top: 2px solid #0a2351;
+    padding-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .pdf-signature-block {
+    font-size: 8.5px;
+    color: #333;
+    text-align: center;
+    width: 200px;
+  }
+
+  .pdf-signature-line {
+    border-top: 1px solid #333;
+    margin-bottom: 3px;
+    margin-top: 30px;
+  }
+
+  .pdf-footer-center {
+    font-size: 7.5px;
+    color: #888;
+    text-align: center;
+    flex: 1;
+  }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 3px solid rgba(200,168,75,0.3);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== AI BUTTON ===== */
+  .field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .field-header label { margin-bottom: 0; }
+
+  .btn-ai {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #6a0dad, #9c27b0);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(106,13,173,0.3);
+  }
+
+  .btn-ai:hover {
+    background: linear-gradient(135deg, #7b1fa2, #ab47bc);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(106,13,173,0.4);
+  }
+
+  .btn-ai:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-ai .ai-icon { font-size: 0.9rem; }
+
+  .ai-generating {
+    border-color: #9c27b0 !important;
+    box-shadow: 0 0 0 3px rgba(156,39,176,0.15) !important;
+    background: #fdf6ff !important;
+  }
+
+  .ai-banner {
+    background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+    border: 1px solid #ce93d8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: #6a0dad;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1a3d7c, #0a2351);
+    border: 1px solid #c8a84b;
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    color: #c8a84b;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .settings-toggle:hover { background: linear-gradient(135deg, #243f7a, #1a3050); }
+  .settings-panel {
+    background: #f0f4ff;
+    border: 1px solid #c8a84b;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .settings-panel.open { display: block; }
+  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .logo-upload-zone {
+    border: 2px dashed #c8a84b;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    background: #fffdf5;
+    transition: all 0.2s;
+    font-size: 0.8rem;
+    color: #5a5a7a;
+  }
+  .logo-upload-zone:hover { background: #fff8e5; }
+  .logo-preview { width: 60px; height: 60px; object-fit: contain; margin: 6px auto; display: block; }
+
+  /* ===== POPUP KREDIT ===== */
+  .popup-kredit {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .popup-kredit.show { display: flex; }
+  .popup-kredit-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 36px;
+    text-align: center;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: popIn 0.3s ease;
+    border-top: 5px solid #c62828;
+  }
+  .popup-kredit-icon { font-size: 3rem; margin-bottom: 12px; }
+  .popup-kredit-title { font-family: 'Merriweather', serif; font-size: 1.1rem; color: #c62828; font-weight: 700; margin-bottom: 10px; }
+  .popup-kredit-msg { font-size: 0.85rem; color: #555; margin-bottom: 20px; line-height: 1.6; }
+  .popup-kredit-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .popup-kredit-btn-topup {
+    background: linear-gradient(135deg, #c62828, #e53935);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .popup-kredit-btn-topup:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(198,40,40,0.4); }
+  .popup-kredit-btn-close {
+    background: #f5f5f5;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .popup-kredit-btn-close:hover { background: #eee; }
+
+  /* ===== POPUP ===== */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  .popup-overlay.show { display: flex; }
+  .popup-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 36px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: popIn 0.3s ease;
+  }
+  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .popup-logo { font-size: 3rem; margin-bottom: 12px; }
+  .popup-title { font-family: 'Merriweather', serif; font-size: 1.2rem; color: #0a2351; font-weight: 700; margin-bottom: 8px; }
+  .popup-credit { font-size: 0.85rem; color: #5a5a7a; margin-bottom: 6px; }
+  .popup-handle { font-size: 1rem; color: #6a0dad; font-weight: 700; margin-bottom: 20px; }
+  .popup-btn {
+    background: linear-gradient(135deg, #0a2351, #1a3d7c);
+    color: #c8a84b;
+    border: 2px solid #c8a84b;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-family: 'Merriweather', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .popup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(10,35,81,0.4); }
+
+  /* ===== FOOTER ===== */
+  .app-footer {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+    margin-top: 20px;
+    padding-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- APP HEADER -->
+  <div class="app-header">
+    <img src="data:image/jpeg;base64,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" 
+         alt="Logo SK Kiandongo" class="header-logo" id="logo-left"
+        >
+
+    <div class="header-center">
+      <h1>SmartOPR SK KIANDONGO</h1>
+      <p>Sistem Jana Laporan Program / Aktiviti</p>
+    </div>
+
+    <img src="data:image/jpeg;base64,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" 
+         alt="Logo SK Kiandongo" class="header-logo" id="logo-right"
+        >
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div style="margin-bottom:6px;">
+    <div class="settings-toggle" onclick="toggleSettings()">
+      <span>⚙️ Tetapan Institusi</span>
+      <span id="settings-arrow">▼</span>
+    </div>
+    <div class="settings-panel" id="settings-panel">
+      <div class="settings-grid" style="margin-bottom:12px;">
+        <div class="field">
+          <label>Nama Institusi</label>
+          <input type="text" id="set-nama-sekolah" value="SEKOLAH KEBANGSAAN KIANDONGO" placeholder="Nama institusi">
+        </div>
+        <div class="field">
+          <label>Alamat Institusi</label>
+          <input type="text" id="set-alamat" value="89108 Sabah, Malaysia" placeholder="Alamat institusi">
+        </div>
+        <div class="field">
+          <label>No. Telefon</label>
+          <input type="text" id="set-tel" value="089-XXX XXX" placeholder="No. telefon">
+        </div>
+        <div class="field">
+          <label>No. Faks</label>
+          <input type="text" id="set-faks" value="089-XXX XXX" placeholder="No. faks">
+        </div>
+        <div class="field">
+          <label>Emel Institusi</label>
+          <input type="text" id="set-emel" value="" placeholder="Contoh: skk@moe-dl.edu.my">
+        </div>
+        <div class="field">
+          <label>Nama Penyedia Laporan</label>
+          <input type="text" id="set-penyedia" placeholder="Nama guru / penyedia">
+        </div>
+        <div class="field">
+          <label>Jawatan Penyedia</label>
+          <input type="text" id="set-jawatan-penyedia" placeholder="Contoh: Guru Biasa">
+        </div>
+        <div class="field">
+          <label>Nama Pengesah</label>
+          <input type="text" id="set-pengesah" placeholder="Nama Guru Besar / PK">
+        </div>
+        <div class="field">
+          <label>Jawatan Pengesah</label>
+          <input type="text" id="set-jawatan-pengesah" value="Guru Besar" placeholder="Contoh: Guru Besar">
+        </div>
+      </div>
+      <div class="field">
+        <label>Logo Institusi Anda (dipaparkan dalam janaan pdf sahaja)</label>
+        <label class="logo-upload-zone" for="logo-upload-input">
+          <img id="logo-preview-settings" style="display:none;" class="logo-preview">
+          <div>Klik untuk muat naik logo institusi</div>
+          <input type="file" id="logo-upload-input" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card">
+
+    <div class="section-title">Maklumat Asas Program</div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <label>Nama Program / Aktiviti</label>
+      <input type="text" id="nama_program" placeholder="Contoh: Program Literasi Murid Tahun 3">
+    </div>
+
+    <div class="grid-2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Anjuran</label>
+        <input type="text" id="anjuran" placeholder="Contoh: Panitia Bahasa Melayu">
+      </div>
+      <div class="field">
+        <label>Tempat</label>
+        <input type="text" id="tempat" placeholder="Contoh: Dewan SK Kiandongo">
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Tarikh</label>
+        <input type="date" id="tarikh">
+      </div>
+      <div class="field">
+        <label>Masa Mula</label>
+        <input type="time" id="masa_mula">
+      </div>
+      <div class="field">
+        <label>Masa Tamat</label>
+        <input type="time" id="masa_tamat">
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:6px;">
+      <label>Sasaran Peserta</label>
+      <input type="text" id="sasaran" placeholder="Contoh: Murid Tahap 1 (Tahun 1 - 3), seramai 45 orang">
+    </div>
+
+    <div class="section-title">Isi Kandungan Laporan</div>
+
+    <div class="ai-banner">
+      <span>✨</span>
+      <span><strong>Ciri AI Tersedia!</strong> Klik butang <strong>✨ Jana AI</strong> di sebelah label untuk menjana kandungan secara automatik berdasarkan maklumat program yang anda isi. <strong>Anda juga boleh mengisi semua medan secara manual</strong> tanpa menggunakan AI — taip terus dalam ruangan yang disediakan.</span>
+    </div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <div class="field-header">
+        <label>Objektif</label>
+        <button class="btn-ai" id="btn-ai-objektif" onclick="janaAI('objektif')" type="button">
+          <span class="ai-icon">✨</span> Jana AI
+        </button>
+      </div>
+      <textarea id="objektif" placeholder="Nyatakan objektif program / aktiviti ini... atau klik ✨ Jana AI"></textarea>
+    </div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <div class="field-header">
+        <label>Aktiviti yang Dijalankan</label>
+        <button class="btn-ai" id="btn-ai-aktiviti" onclick="janaAI('aktiviti')" type="button">
+          <span class="ai-icon">✨</span> Jana AI
+        </button>
+      </div>
+      <textarea id="aktiviti" placeholder="Huraikan aktiviti-aktiviti yang dijalankan... atau klik ✨ Jana AI"></textarea>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:6px;">
+      <div class="field">
+        <div class="field-header">
+          <label>Kekuatan</label>
+          <button class="btn-ai" id="btn-ai-kekuatan" onclick="janaAI('kekuatan')" type="button">
+            <span class="ai-icon">✨</span> Jana AI
+          </button>
+        </div>
+        <textarea id="kekuatan" placeholder="Nyatakan kekuatan program... atau klik ✨ Jana AI"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <label>Kelemahan / Cadangan</label>
+          <button class="btn-ai" id="btn-ai-kelemahan" onclick="janaAI('kelemahan')" type="button">
+            <span class="ai-icon">✨</span> Jana AI
+          </button>
+        </div>
+        <textarea id="kelemahan" placeholder="Nyatakan kelemahan & cadangan... atau klik ✨ Jana AI"></textarea>
+      </div>
+    </div>
+
+    <div class="section-title">Gambar Program</div>
+
+    <div class="upload-btn-row">
+      <button class="btn-camera" onclick="document.getElementById('img-input').click()" type="button">
+        <span>📷</span> Muat Naik Gambar
+      </button>
+      <span class="upload-hint">Maksimum 6 keping (JPG, PNG, WEBP)</span>
+      <input type="file" id="img-input" accept="image/*" multiple style="display:none">
+    </div>
+
+    <div id="img-preview-grid" class="image-preview-grid"></div>
+    <div id="img-count" style="text-align:center;margin-top:8px;"></div>
+
+    <!-- GENERATE BUTTON -->
+    <button class="btn-generate" id="btn-generate" onclick="generatePDF()">
+      📄 JANA PDF
+    </button>
+
+    <div id="status-msg"></div>
+
+  </div>
+  <!-- /FORM CARD -->
+
+  <div class="app-footer">SK Kiandongo &mdash; SmartOPR &copy; 2026</div>
+</div>
+
+<!-- POPUP CIRI 4 -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box">
+    <div class="popup-logo">📄✨</div>
+    <div class="popup-title">SmartOPR</div>
+    <div class="popup-credit">Created for you for free by</div>
+    <div class="popup-handle">@StingingPolyphony</div>
+    <button class="popup-btn" onclick="closePopupAndDownload()">📥 MUAT TURUN PDF</button>
+  </div>
+</div>
+
+<!-- POPUP KREDIT HABIS -->
+<div class="popup-kredit" id="popup-kredit">
+  <div class="popup-kredit-box">
+    <div class="popup-kredit-icon">💳⚠️</div>
+    <div class="popup-kredit-title">Kredit DeepSeek Habis!</div>
+    <div class="popup-kredit-msg">
+      Kredit AI anda telah habis atau tidak mencukupi.<br>
+      Sila topup kredit DeepSeek untuk terus menggunakan ciri Jana AI.<br><br>
+      <small style="color:#888;">Anda masih boleh mengisi laporan secara manual.</small>
+    </div>
+    <div class="popup-kredit-btns">
+      <button class="popup-kredit-btn-topup" onclick="window.open('https://platform.deepseek.com/usage','_blank');closePopupKredit()">
+        💰 Topup Kredit
+      </button>
+      <button class="popup-kredit-btn-close" onclick="closePopupKredit()">
+        Tutup
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HIDDEN PDF TEMPLATE ===== -->
+<div id="pdf-template">
+  <div class="pdf-page" id="pdf-page">
+    <div class="pdf-content">
+
+      <!-- PDF Header -->
+      <div class="pdf-header">
+        <img id="pdf-logo-l" src="data:image/jpeg;base64,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" class="pdf-logo" crossorigin="anonymous">
+        <div class="pdf-header-center">
+          <div class="pdf-kementerian">Kementerian Pendidikan Malaysia</div>
+          <div class="pdf-school-name" id="pdf-school-name-el">SEKOLAH KEBANGSAAN KIANDONGO</div>
+          <div class="pdf-school-address" id="pdf-school-address-el">
+            89108 Sabah, Malaysia<br>
+            Tel: 089-XXX XXX &nbsp;|&nbsp; Faks: 089-XXX XXX
+          </div>
+        </div>
+        <img id="pdf-logo-r" src="data:image/jpeg;base64,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" class="pdf-logo" crossorigin="anonymous">
+      </div>
+
+      <hr class="pdf-header-divider">
+
+      <div class="pdf-report-title-bar">LAPORAN ONE PAGE REPORT (OPR)</div>
+
+      <!-- Main Table -->
+      <table class="pdf-table">
+        <!-- Section: Maklumat Asas -->
+        <tr class="pdf-section-header">
+          <td colspan="4">A. MAKLUMAT ASAS PROGRAM / AKTIVITI</td>
+        </tr>
+        <tr>
+          <td class="label-cell">Nama Program / Aktiviti</td>
+          <td class="value-cell" id="pdf-nama_program" colspan="3" style="font-weight:700;"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Anjuran</td>
+          <td class="value-cell" id="pdf-anjuran"></td>
+          <td class="label-cell" style="text-align:right;">Tempat</td>
+          <td class="value-cell" id="pdf-tempat"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Tarikh</td>
+          <td class="value-cell" id="pdf-tarikh"></td>
+          <td class="label-cell" style="text-align:right;">Masa</td>
+          <td class="value-cell" id="pdf-masa"></td>
+        </tr>
+        <tr>
+          <td class="label-cell">Sasaran Peserta</td>
+          <td class="value-cell" id="pdf-sasaran" colspan="3"></td>
+        </tr>
+
+        <!-- Section: Objektif -->
+        <tr class="pdf-section-header">
+          <td colspan="4">B. OBJEKTIF PROGRAM</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="full-width" id="pdf-objektif" style="min-height:50px;"></td>
+        </tr>
+
+        <!-- Section: Aktiviti -->
+        <tr class="pdf-section-header">
+          <td colspan="4">C. AKTIVITI YANG DIJALANKAN</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="full-width" id="pdf-aktiviti" style="min-height:60px;"></td>
+        </tr>
+
+        <!-- Section: Kekuatan & Kelemahan -->
+        <tr class="pdf-section-header">
+          <td colspan="2">D. KEKUATAN</td>
+          <td colspan="2" style="background:#1a3d7c;color:#c8a84b;font-weight:700;text-align:center;letter-spacing:1px;font-size:9px;text-transform:uppercase;padding:5px 8px;">E. KELEMAHAN / CADANGAN PENAMBAHBAIKAN</td>
+        </tr>
+        <tr>
+          <td colspan="2" id="pdf-kekuatan" style="vertical-align:top;min-height:60px;"></td>
+          <td colspan="2" id="pdf-kelemahan" style="vertical-align:top;min-height:60px;"></td>
+        </tr>
+      </table>
+
+      <!-- Images section -->
+      <div id="pdf-images-section" style="display:none;">
+        <div class="pdf-images-title">F. DOKUMENTASI GAMBAR PROGRAM</div>
+        <div class="pdf-images-grid" id="pdf-images-grid"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="pdf-footer">
+        <div class="pdf-signature-block">
+          <div class="pdf-signature-line"></div>
+          <div><strong>Disediakan Oleh:</strong></div>
+          <div id="pdf-penyedia-name" style="margin-top:2px;">____________________</div>
+          <div id="pdf-penyedia-jawatan" style="font-size:7.5px;">____________________</div>
+          <div>Tarikh: ____________________</div>
+        </div>
+        <div class="pdf-footer-center">
+          Laporan ini dijana secara automatik oleh SmartOPR SK Kiandongo<br>
+          <span id="pdf-gen-date"></span>
+        </div>
+        <div class="pdf-signature-block">
+          <div class="pdf-signature-line"></div>
+          <div><strong>Disahkan Oleh:</strong></div>
+          <div id="pdf-pengesah-name" style="margin-top:2px;">____________________</div>
+          <div id="pdf-pengesah-jawatan" style="font-size:7.5px;">Guru Besar</div>
+          <div>Tarikh: ____________________</div>
+        </div>
+      </div>
+
+    </div><!-- /pdf-content -->
+  </div><!-- /pdf-page -->
+</div><!-- /pdf-template -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ===== AI GENERATION =====
+async function janaAI(field) {
+  const namaProgram = document.getElementById('nama_program').value.trim();
+  const anjuran = document.getElementById('anjuran').value.trim();
+  const sasaran = document.getElementById('sasaran').value.trim();
+  const tempat = document.getElementById('tempat').value.trim();
+  const objektifSedia = document.getElementById('objektif').value.trim();
+  const aktivitiSedia = document.getElementById('aktiviti').value.trim();
+
+  if (!namaProgram) {
+    showStatus('⚠ Sila isi Nama Program / Aktiviti terlebih dahulu sebelum menggunakan ciri AI.', 'error');
+    document.getElementById('nama_program').focus();
+    return;
+  }
+
+  const btnId = `btn-ai-${field}`;
+  const btn = document.getElementById(btnId);
+  const textarea = document.getElementById(field);
+
+  // Set loading state
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:2px;margin-right:5px;"></span> Menjana...';
+  textarea.classList.add('ai-generating');
+  textarea.value = '';
+  textarea.placeholder = '✨ AI sedang menjana kandungan...';
+  hideStatus();
+
+  const konteks = `
+Nama Program / Aktiviti: ${namaProgram}
+Anjuran: ${anjuran || 'Tidak dinyatakan'}
+Sasaran Peserta: ${sasaran || 'Tidak dinyatakan'}
+Tempat: ${tempat || 'Tidak dinyatakan'}
+${objektifSedia ? 'Objektif (sedia ada): ' + objektifSedia : ''}
+${aktivitiSedia ? 'Aktiviti (sedia ada): ' + aktivitiSedia : ''}
+  `.trim();
+
+  const prompts = {
+    objektif: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan OBJEKTIF program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal dan tepat. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 5 objektif. Pastikan objektif bermula dengan kata kerja yang sesuai (meningkatkan, memupuk, memberi, mendedahkan, dsb). HANYA tulis objektif sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    aktiviti: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan AKTIVITI YANG DIJALANKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 4 hingga 6 aktiviti yang logik dan sesuai dengan konteks program. HANYA tulis senarai aktiviti sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    kekuatan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KEKUATAN program dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 4 kekuatan yang spesifik dan relevan. HANYA tulis kekuatan sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    kelemahan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KELEMAHAN DAN CADANGAN PENAMBAHBAIKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 2 hingga 3 kelemahan beserta cadangan penambahbaikan yang konstruktif. HANYA tulis kelemahan dan cadangan sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`
+  };
+
+  // ⚙️ URL Cloudflare Worker anda (DeepSeek) — gantikan selepas deploy
+  const WORKER_URL = 'https://smartopr-ai-v2.g-95272556.workers.dev';
+
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: prompts[field] }]
+      })
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error('HTTP ' + response.status);
+    }
+
+    const data = await response.json();
+
+    // Handle error from worker
+    if (data.error) {
+      if (data.error === 'kredit_habis') {
+        showPopupKredit();
+        return;
+      }
+      throw new Error(data.error);
+    }
+
+    // Extract text - support both DeepSeek and Claude response formats
+    let result = '';
+    if (data.content && Array.isArray(data.content)) {
+      result = data.content[0]?.text || data.content.find(b => b.type === 'text')?.text || '';
+    } else if (data.choices && Array.isArray(data.choices)) {
+      result = data.choices[0]?.message?.content || '';
+    }
+
+    if (result) {
+      textarea.value = result.trim();
+      showStatus(`✅ Kandungan ${field} berjaya dijana oleh AI! Anda boleh edit jika perlu.`, 'success');
+    } else {
+      throw new Error('Tiada kandungan dijana. Cuba semula.');
+    }
+  } catch (err) {
+    console.error(err);
+    // Detect kredit habis
+    const errMsg = err.message.toLowerCase();
+    if (errMsg.includes('insufficient') || errMsg.includes('credit') || 
+        errMsg.includes('quota') || errMsg.includes('402') ||
+        errMsg.includes('balance') || errMsg.includes('kredit')) {
+      showPopupKredit();
+    } else {
+      showStatus('❌ Ralat AI: ' + err.message, 'error');
+    }
+    textarea.placeholder = 'Sila cuba semula atau taip secara manual...';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="ai-icon">✨</span> Jana AI';
+    textarea.classList.remove('ai-generating');
+  }
+}
+
+// ===== IMAGE UPLOAD =====
+const imgInput = document.getElementById('img-input');
+const imgPreviewGrid = document.getElementById('img-preview-grid');
+const imgCount = document.getElementById('img-count');
+let uploadedImages = []; // {dataUrl, file}
+
+imgInput.addEventListener('change', function(e) {
+  const files = Array.from(e.target.files);
+  const remaining = 6 - uploadedImages.length;
+  const toAdd = files.slice(0, remaining);
+
+  if (files.length > remaining) {
+    showStatus(`Hanya ${remaining} lagi gambar yang boleh dimuat naik (maksimum 6).`, 'error');
+  }
+
+  toAdd.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      uploadedImages.push({ dataUrl: ev.target.result, file });
+      renderPreviews();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Reset input so same files can be re-selected if needed
+  e.target.value = '';
+});
+
+function renderPreviews() {
+  imgPreviewGrid.innerHTML = '';
+  imgPreviewGrid.style.display = uploadedImages.length > 0 ? 'grid' : '';
+
+  uploadedImages.forEach((img, idx) => {
+    const item = document.createElement('div');
+    item.className = 'preview-item';
+    item.innerHTML = `<img src="${img.dataUrl}" alt="Gambar ${idx+1}">
+      <button class="remove-btn" onclick="removeImage(${idx})" title="Buang gambar">✕</button>`;
+    imgPreviewGrid.appendChild(item);
+  });
+
+  if (uploadedImages.length > 0) {
+    imgCount.innerHTML = `<span class="img-count-badge">${uploadedImages.length} / 6 gambar dimuat naik</span>`;
+  } else {
+    imgCount.innerHTML = '';
+  }
+}
+
+function removeImage(idx) {
+  uploadedImages.splice(idx, 1);
+  renderPreviews();
+}
+
+// ===== STATUS =====
+function showStatus(msg, type) {
+  const el = document.getElementById('status-msg');
+  el.textContent = msg;
+  el.className = type;
+  el.style.display = 'block';
+}
+
+function hideStatus() {
+  const el = document.getElementById('status-msg');
+  el.style.display = 'none';
+}
+
+// ===== FORMAT HELPERS =====
+function formatTarikh(val) {
+  if (!val) return '';
+  const d = new Date(val);
+  const days = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
+  const months = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function formatMasa(val) {
+  if (!val) return '';
+  const [h, m] = val.split(':');
+  const hour = parseInt(h);
+  const suffix = hour < 12 ? 'pagi' : hour < 17 ? 'petang' : 'malam';
+  const hour12 = hour % 12 || 12;
+  return `${hour12}:${m} ${suffix}`;
+}
+
+function formatTextToHtml(text) {
+  if (!text) return '<em style="color:#999;">-</em>';
+  // Convert newlines to <br>
+  return text.replace(/\n/g, '<br>');
+}
+
+// ===== GENERATE PDF =====
+async function generatePDF() {
+  hideStatus();
+
+  // Gather values
+  const fields = {
+    nama_program: document.getElementById('nama_program').value.trim(),
+    anjuran: document.getElementById('anjuran').value.trim(),
+    tarikh: document.getElementById('tarikh').value,
+    masa_mula: document.getElementById('masa_mula').value,
+    masa_tamat: document.getElementById('masa_tamat').value,
+    tempat: document.getElementById('tempat').value.trim(),
+    sasaran: document.getElementById('sasaran').value.trim(),
+    objektif: document.getElementById('objektif').value.trim(),
+    aktiviti: document.getElementById('aktiviti').value.trim(),
+    kekuatan: document.getElementById('kekuatan').value.trim(),
+    kelemahan: document.getElementById('kelemahan').value.trim(),
+  };
+
+  // Validate tetapan sekolah dahulu
+  const namaSekolahCheck = document.getElementById('set-nama-sekolah')?.value.trim();
+  const penyediaCheck = document.getElementById('set-penyedia')?.value.trim();
+  const pengesahCheck = document.getElementById('set-pengesah')?.value.trim();
+
+  if (!namaSekolahCheck || !penyediaCheck || !pengesahCheck) {
+    showStatus('⚠ Sila lengkapkan Tetapan Institusi dahulu — Nama Institusi, Nama Penyedia dan Nama Pengesah wajib diisi.', 'error');
+    // Buka settings panel
+    const panel = document.getElementById('settings-panel');
+    const arrow = document.getElementById('settings-arrow');
+    if (!panel.classList.contains('open')) {
+      panel.classList.add('open');
+      arrow.textContent = '▲';
+    }
+    panel.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+
+  // Validate required
+  if (!fields.nama_program) {
+    showStatus('⚠ Sila masukkan Nama Program / Aktiviti.', 'error');
+    document.getElementById('nama_program').focus();
+    return;
+  }
+
+  // Populate PDF template
+  document.getElementById('pdf-nama_program').innerHTML = fields.nama_program;
+  document.getElementById('pdf-anjuran').innerHTML = fields.anjuran || '-';
+  document.getElementById('pdf-tarikh').innerHTML = formatTarikh(fields.tarikh) || '-';
+  
+  let masaStr = '';
+  if (fields.masa_mula && fields.masa_tamat) masaStr = `${formatMasa(fields.masa_mula)} – ${formatMasa(fields.masa_tamat)}`;
+  else if (fields.masa_mula) masaStr = formatMasa(fields.masa_mula);
+  else masaStr = '-';
+  document.getElementById('pdf-masa').innerHTML = masaStr;
+  
+  document.getElementById('pdf-tempat').innerHTML = fields.tempat || '-';
+  document.getElementById('pdf-sasaran').innerHTML = fields.sasaran || '-';
+  document.getElementById('pdf-objektif').innerHTML = formatTextToHtml(fields.objektif);
+  document.getElementById('pdf-aktiviti').innerHTML = formatTextToHtml(fields.aktiviti);
+  document.getElementById('pdf-kekuatan').innerHTML = formatTextToHtml(fields.kekuatan);
+  document.getElementById('pdf-kelemahan').innerHTML = formatTextToHtml(fields.kelemahan);
+
+  // Date generated
+  const now = new Date();
+  document.getElementById('pdf-gen-date').textContent = 
+    `Dijana pada: ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  // Images
+  const imagesSection = document.getElementById('pdf-images-section');
+  const imagesGrid = document.getElementById('pdf-images-grid');
+  
+  if (uploadedImages.length > 0) {
+    imagesSection.style.display = 'block';
+    imagesGrid.innerHTML = '';
+    // Always create 6 cells
+    for (let i = 0; i < 6; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'pdf-img-cell';
+      if (uploadedImages[i]) {
+        cell.innerHTML = `<img src="${uploadedImages[i].dataUrl}" alt="Gambar ${i+1}">`;
+      } else {
+        cell.style.background = '#f0f0f0';
+        cell.style.border = '1px dashed #ccc';
+      }
+      imagesGrid.appendChild(cell);
+    }
+  } else {
+    imagesSection.style.display = 'none';
+  }
+
+  // Disable button, show loading
+  const btn = document.getElementById('btn-generate');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menjana PDF...';
+  showStatus('Sedang menjana laporan PDF, sila tunggu...', 'info');
+
+  // Update school info BEFORE canvas generation
+  const namaSekolah = document.getElementById('set-nama-sekolah')?.value || 'SEKOLAH KEBANGSAAN KIANDONGO';
+  const alamat = document.getElementById('set-alamat')?.value || '89108 Sabah, Malaysia';
+  const tel = document.getElementById('set-tel')?.value || '089-XXX XXX';
+  const faks = document.getElementById('set-faks')?.value || '089-XXX XXX';
+  const penyedia = document.getElementById('set-penyedia')?.value || '';
+  const jawatanPenyedia = document.getElementById('set-jawatan-penyedia')?.value || '';
+  const pengesah = document.getElementById('set-pengesah')?.value || '';
+  const jawatanPengesah = document.getElementById('set-jawatan-pengesah')?.value || 'Guru Besar';
+
+  const nameEl = document.getElementById('pdf-school-name-el');
+  const addrEl = document.getElementById('pdf-school-address-el');
+  if (nameEl) nameEl.textContent = namaSekolah.toUpperCase();
+  const emel = document.getElementById('set-emel')?.value || '';
+  if (addrEl) addrEl.innerHTML = alamat + '<br>Tel: ' + tel + ' &nbsp;|&nbsp; Faks: ' + faks + (emel ? '<br>Emel: ' + emel : '');
+
+  const penyediaEl = document.getElementById('pdf-penyedia-name');
+  const penyediaJwt = document.getElementById('pdf-penyedia-jawatan');
+  const pengesahEl = document.getElementById('pdf-pengesah-name');
+  const pengesahJwt = document.getElementById('pdf-pengesah-jawatan');
+  if (penyediaEl) penyediaEl.textContent = penyedia || '____________________';
+  if (penyediaJwt) penyediaJwt.textContent = jawatanPenyedia || '____________________';
+  if (pengesahEl) pengesahEl.textContent = pengesah || '____________________';
+  if (pengesahJwt) pengesahJwt.textContent = jawatanPengesah;
+
+  if (customLogoDataUrl) {
+    document.getElementById('pdf-logo-l').src = customLogoDataUrl;
+    document.getElementById('pdf-logo-r').src = customLogoDataUrl;
+  }
+
+  // Wait for DOM render
+  await new Promise(r => setTimeout(r, 800));
+
+  // Declare outside try so accessible for popup
+  let pdf, filename;
+
+  try {
+    const pdfPage = document.getElementById('pdf-page');
+    
+    const canvas = await html2canvas(pdfPage, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: 794,
+      windowWidth: 794,
+    });
+
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    const { jsPDF } = window.jspdf;
+    pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const canvasRatio = canvas.height / canvas.width;
+    const imgHeightInPdf = pdfWidth * canvasRatio;
+
+    if (imgHeightInPdf <= pdfHeight) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgHeightInPdf);
+    } else {
+      const scaledWidth = pdfHeight / canvasRatio;
+      const offsetX = (pdfWidth - scaledWidth) / 2;
+      pdf.addImage(imgData, 'JPEG', offsetX, 0, scaledWidth, pdfHeight);
+    }
+
+    filename = 'Laporan_OPR_' + fields.nama_program.replace(/[^a-zA-Z0-9 ]/g,'').replace(/ +/g,'_') + '_' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '.pdf';
+
+  } catch (err) {
+    console.error(err);
+    showStatus('❌ Ralat semasa menjana PDF: ' + err.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = '📄 JANA PDF';
+    return;
+  }
+
+  // Show popup CIRI 4
+  window._pendingPdfDownload = { pdf, filename };
+  document.getElementById('popup-overlay').classList.add('show');
+
+  btn.disabled = false;
+  btn.innerHTML = '📄 JANA PDF';
+}
+
+// ===== POPUP FUNCTIONS =====
+function showPopupKredit() {
+  document.getElementById('popup-kredit').classList.add('show');
+}
+
+function closePopupKredit() {
+  document.getElementById('popup-kredit').classList.remove('show');
+}
+
+function closePopupAndDownload() {
+  document.getElementById('popup-overlay').classList.remove('show');
+  if (window._pendingPdfDownload) {
+    const { pdf, filename } = window._pendingPdfDownload;
+    pdf.save(filename);
+    window._pendingPdfDownload = null;
+    showStatus('✅ PDF berjaya dijana dan dimuat turun!', 'success');
+  }
+}
+
+// ===== SETTINGS PANEL =====
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  const arrow = document.getElementById('settings-arrow');
+  panel.classList.toggle('open');
+  arrow.textContent = panel.classList.contains('open') ? '▲' : '▼';
+}
+
+// ===== LOGO UPLOAD =====
+let customLogoDataUrl = null;
+
+function handleLogoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    customLogoDataUrl = ev.target.result;
+    // Hanya update preview dalam settings — BUKAN header app
+    document.getElementById('logo-preview-settings').src = customLogoDataUrl;
+  };
+  reader.readAsDataURL(file);
+}
+
+</script>
+</body>
+</html>
