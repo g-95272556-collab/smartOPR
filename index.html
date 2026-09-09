@@ -616,27 +616,24 @@
     justify-content: space-between;
     background: linear-gradient(135deg, #1a3d7c, #0a2351);
     border: 1px solid #c8a84b;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
     padding: 12px 18px;
-    margin-bottom: 6px;
-    cursor: pointer;
+    margin-bottom: 0;
     color: #c8a84b;
     font-weight: 700;
     font-size: 0.85rem;
     letter-spacing: 1px;
     text-transform: uppercase;
-    transition: all 0.2s;
   }
-  .settings-toggle:hover { background: linear-gradient(135deg, #243f7a, #1a3050); }
   .settings-panel {
     background: #f0f4ff;
     border: 1px solid #c8a84b;
-    border-radius: 10px;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
     padding: 20px 24px;
     margin-bottom: 20px;
-    display: none;
+    display: block;
   }
-  .settings-panel.open { display: block; }
   .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .logo-upload-zone {
     border: 2px dashed #c8a84b;
@@ -775,9 +772,8 @@
 
   <!-- SETTINGS PANEL -->
   <div style="margin-bottom:6px;">
-    <div class="settings-toggle" onclick="toggleSettings()">
+    <div class="settings-toggle">
       <span>⚙️ Tetapan Institusi</span>
-      <span id="settings-arrow">▼</span>
     </div>
     <div class="settings-panel" id="settings-panel">
       <div class="settings-grid" style="margin-bottom:12px;">
@@ -1346,14 +1342,7 @@ async function generatePDF() {
 
   if (!namaSekolahCheck || !penyediaCheck || !pengesahCheck) {
     showStatus('⚠ Sila lengkapkan Tetapan Institusi dahulu — Nama Institusi, Nama Penyedia dan Nama Pengesah wajib diisi.', 'error');
-    // Buka settings panel
-    const panel = document.getElementById('settings-panel');
-    const arrow = document.getElementById('settings-arrow');
-    if (!panel.classList.contains('open')) {
-      panel.classList.add('open');
-      arrow.textContent = '▲';
-    }
-    panel.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('settings-panel').scrollIntoView({ behavior: 'smooth' });
     return;
   }
 
@@ -1623,14 +1612,6 @@ function closePopupAndDownload() {
       }
     });
   }
-}
-
-// ===== SETTINGS PANEL =====
-function toggleSettings() {
-  const panel = document.getElementById('settings-panel');
-  const arrow = document.getElementById('settings-arrow');
-  panel.classList.toggle('open');
-  arrow.textContent = panel.classList.contains('open') ? '▲' : '▼';
 }
 
 // ===== LOGO UPLOAD =====
