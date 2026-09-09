@@ -120,9 +120,21 @@ module.exports = async function handler(req, res) {
       .replace(/\*\*(.*?)\*\*/g, '$1') // **tebal**
       .replace(/(^|\s)\*(?!\s)([^*\n]+?)\*(?=\s|$)/g, '$1$2') // *italik*
       .replace(/^#{1,6}\s+/gm, '') // tajuk #
-      .replace(/^\s*(berikut(?:\s+\w+){0,5}[:：])\s*$/im, '') // buang baris pembukaan "Berikut ...:"
+      .replace(/^\s*[-*]\s+/gm, '') // penanda senarai bullet
       .replace(/\n{3,}/g, '\n\n')
       .trim();
+
+    // Jika output ada senarai bernombor (1. ...), buang segala ayat/ tajuk
+    // pembukaan sebelum item "1." — Gemini kadang tambah "Berikut adalah..." /
+    // baris tajuk "IMPAK PROGRAM" walaupun diminta hanya senarai.
+    const firstItem = text.search(/^\s*1[.)]\s/m);
+    if (firstItem > 0) {
+      const preamble = text.slice(0, firstItem);
+      // hanya buang jika bahagian pembukaan itu pendek (bukan kandungan sebenar)
+      if (preamble.replace(/\s+/g, ' ').trim().length <= 160) {
+        text = text.slice(firstItem).trim();
+      }
+    }
 
     if (!text) {
       const blockReason = data?.promptFeedback?.blockReason;
