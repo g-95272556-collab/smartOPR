@@ -73,7 +73,10 @@ module.exports = async function handler(req, res) {
     generationConfig: {
       temperature: 0.7,
       topP: 0.95,
-      maxOutputTokens: 1200,
+      maxOutputTokens: 2048,
+      // gemini-2.5-* mengaktifkan "thinking" secara lalai dan ia memakan
+      // bajet token output -> teks jawapan terpotong. Matikan.
+      thinkingConfig: { thinkingBudget: 0 },
     },
   };
   if (systemText) {
@@ -107,9 +110,18 @@ module.exports = async function handler(req, res) {
 
     // Ekstrak teks
     const cand = data?.candidates?.[0];
-    const text = (cand?.content?.parts || [])
+    let text = (cand?.content?.parts || [])
       .map((p) => p.text || '')
       .join('')
+      .trim();
+
+    // Bersihkan penanda markdown yang tidak sesuai untuk kotak teks biasa
+    text = text
+      .replace(/\*\*(.*?)\*\*/g, '$1') // **tebal**
+      .replace(/(^|\s)\*(?!\s)([^*\n]+?)\*(?=\s|$)/g, '$1$2') // *italik*
+      .replace(/^#{1,6}\s+/gm, '') // tajuk #
+      .replace(/^\s*(berikut(?:\s+\w+){0,5}[:：])\s*$/im, '') // buang baris pembukaan "Berikut ...:"
+      .replace(/\n{3,}/g, '\n\n')
       .trim();
 
     if (!text) {
