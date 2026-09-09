@@ -32,6 +32,12 @@ Jadi elemen di bawah ialah **konvensyen yang selamat dan diterima umum**, bukan
 petikan pekeliling. Sekolah anda mungkin ada templat sendiri — jika ada, ikut
 templat sekolah dahulu.
 
+> **Kemas kini (dapatan lapangan):** Templat OPR sekolah masa kini secara
+> lazimnya mengandungi medan **"Impak Program"** yang tersendiri (berasingan
+> daripada Rumusan/Penutup) di samping **"Cadangan Penambahbaikan"**. Kedua-dua
+> elemen ini kini dianggap wajib. Struktur di bawah telah dikemas kini
+> sewajarnya. Rujuk juga bahagian 7 (Nota untuk app smartOPR).
+
 ---
 
 ## 2. Struktur Wajib OPR (susunan standard)
@@ -50,8 +56,9 @@ templat sekolah dahulu.
 | 8 | **Aktiviti / Pengisian Program** | 4–6 poin bernombor mengikut aliran program |
 | 9 | **Kekuatan Program** | 3–4 poin bernombor |
 | 10 | **Kelemahan / Kekangan** | 2–3 poin bernombor |
-| 11 | **Cadangan Penambahbaikan** | Sepadan dengan setiap kelemahan (2–3 poin) |
-| 12 | **Rumusan / Penutup** | 1 perenggan pendek — impak & penghargaan |
+| 11 | **Cadangan Penambahbaikan** | Elemen tersendiri. Sepadan dengan setiap kelemahan (2–3 poin), boleh dilaksana (SMART) |
+| 12 | **Impak Program** | **Elemen tersendiri (wajib).** 2–4 poin bernombor — kesan sebenar terhadap murid/sekolah: peningkatan pengetahuan, kemahiran, sikap/nilai, penyertaan, pencapaian. Sejajar SKPMg2 (impak terhadap murid). Nyatakan bukti/angka jika ada |
+| 13 | **Rumusan / Penutup** | 1 perenggan pendek — penghargaan & cadangan sama ada program diteruskan |
 | — | **Lampiran gambar** | 2–6 keping, dalam jadual, setiap satu ada kapsyen |
 | — | **Blok pengesahan** | Disediakan oleh / Disemak oleh / Disahkan oleh |
 
@@ -78,10 +85,13 @@ Tarikh: ..................       Tarikh: ..................      Tarikh: .......
    `meningkatkan, memupuk, melahirkan, mendedahkan, menerapkan, memantapkan,
    memperkukuh, membudayakan, memberi pendedahan, menggalakkan`.
 4. **Format poin bernombor** (`1.`, `2.`, `3.`) untuk objektif, aktiviti,
-   kekuatan, kelemahan, cadangan — bukan perenggan panjang.
+   kekuatan, kelemahan, cadangan penambahbaikan dan impak — bukan perenggan panjang.
 5. **Kelemahan mesti berpasangan dengan cadangan.** Setiap kelemahan yang
    dinyatakan perlu ada cadangan penambahbaikan yang munasabah dan boleh
    dilaksanakan (SMART).
+6. **Impak mesti dikaitkan dengan objektif.** Tulis impak sebagai kesan yang
+   benar-benar berlaku pada murid/sekolah (bukan mengulang objektif) dan
+   nyatakan sama ada objektif tercapai. Sertakan bukti/angka bila ada.
 6. **Padat.** Setiap poin 1–2 baris. Keseluruhan laporan muat 1 muka surat.
 7. **Fakta angka jika ada.** Bilangan peserta, peratus kehadiran, kos, dsb.
 8. **Konsisten kata ganti.** Guna *"pihak sekolah"*, *"peserta"*, *"guru
@@ -130,6 +140,14 @@ Tarikh: ..................       Tarikh: ..................      Tarikh: .......
 - Peruntukan ditambah bagi menyediakan peralatan yang mencukupi …
 - Aktiviti luar disediakan pelan alternatif (indoor) sekiranya cuaca tidak mengizinkan …
 
+### Impak Program
+- Murid menunjukkan peningkatan pengetahuan dan kefahaman tentang … hasil penyertaan program.
+- Kemahiran … dalam kalangan murid dapat diasah melalui aktiviti hands-on yang dijalankan.
+- Nilai murni seperti kerjasama, keyakinan diri dan disiplin lebih terserlah sepanjang program.
+- Sebanyak …% peserta mencapai tahap … dalam penilaian/pentaksiran selepas program.
+- Program berjaya memberi pendedahan awal kepada murid terhadap … yang sebelum ini terhad.
+- Hubungan dua hala antara sekolah, murid dan ibu bapa/komuniti menjadi lebih erat.
+
 ### Rumusan / Penutup
 - Secara keseluruhannya, program telah mencapai objektif yang disasarkan.
 - Pihak sekolah merakamkan penghargaan kepada semua pihak yang terlibat.
@@ -139,11 +157,13 @@ Tarikh: ..................       Tarikh: ..................      Tarikh: .......
 
 ## 5. Senarai Semak Sebelum Hantar
 
-- [ ] Semua 12 bahagian ada dan mengikut susunan
+- [ ] Semua 13 bahagian ada dan mengikut susunan
 - [ ] Tajuk huruf besar + kepala surat rasmi lengkap
 - [ ] Objektif 3–5 poin, setiap satu mula dengan kata kerja
 - [ ] Aktiviti 4–6 poin mengikut aliran sebenar program
-- [ ] Setiap kelemahan ada cadangan penambahbaikan yang sepadan
+- [ ] Setiap kelemahan ada cadangan penambahbaikan yang sepadan (elemen tersendiri)
+- [ ] **Impak Program** ada sebagai bahagian tersendiri (2–4 poin, kesan pada murid/sekolah)
+- [ ] Impak dikaitkan semula dengan objektif — adakah objektif tercapai?
 - [ ] Ada data angka (kehadiran, bilangan peserta, %)
 - [ ] Bahasa formal, ayat laporan (pasif), tiada bahasa pasar
 - [ ] Muat 1 muka surat; gambar 2–6 keping ada kapsyen
@@ -152,14 +172,36 @@ Tarikh: ..................       Tarikh: ..................      Tarikh: .......
 
 ---
 
-## 6. Sumber Rujukan
+## 6. Nota untuk app smartOPR (jurang semasa)
+
+Struktur PDF app sekarang: **A. Maklumat Asas → B. Objektif → C. Aktiviti →
+D. Kekuatan → E. Kelemahan / Cadangan Penambahbaikan → F. Dokumentasi Gambar →
+blok pengesahan.**
+
+Berbanding standard di bahagian 2:
+
+| Elemen standard | Status dalam app | Tindakan |
+|---|---|---|
+| Cadangan Penambahbaikan | Ada, tetapi **digabung** dalam medan `kelemahan` (bahagian E) | Boleh kekal, atau pisahkan jadi medan sendiri |
+| **Impak Program** | **TIADA** | **Tambah bahagian baharu** (cth "F. Impak Program", gambar jadi G) + medan borang `impak` + butang ✨ Jana AI |
+| Rumusan / Penutup | Tiada medan khusus | Pilihan — boleh tambah atau kekal tanpa |
+
+Cadangan minimum: tambah satu `<textarea id="impak">` + butang Jana AI (guna
+`prompt.impak` baharu dalam `janaAI()`), dan satu baris bahagian dalam templat
+PDF sebelum "DOKUMENTASI GAMBAR".
+
+---
+
+## 7. Sumber Rujukan
 
 - [Contoh One Page Report Sekolah 2024 — Template Laporan Program Lengkap (Lemon8)](https://www.lemon8-app.com/@farridamohd.ghazali/7456367483415577106?region=my)
 - [Panduan Lengkap One Page Report untuk Aktiviti Sekolah & Kokurikulum 2024 (Lemon8)](https://www.lemon8-app.com/@farridamohd.ghazali/7458583196574433800?region=my)
 - [Panduan Lengkap One Page Report untuk Aktiviti dan Program di SMK Pelindung (Lemon8)](https://www.lemon8-app.com/@nsyazanams/7458508711380943378?region=my)
 - [Template One Page Report — Cikgu Nur Atiqah](https://www.cikguatiqah.com/2024/05/template-one-page-report.html)
 - [OPR SISC+ 2023 — AnyFlip](https://anyflip.com/yponl/vptp/basic/101-150)
-- Rujukan asas: *Buku Panduan Pengurusan Kokurikulum Sekolah*, KPM; *SKPMg2* Standard 3.4 & 4.
+- [Template OPR & Kolaj Gambar Sekolah (Lemon8)](https://www.lemon8-app.com/@keddyberry/7554247930400981511?region=my) — templat dengan medan "Impak Program" berasingan
+- [Panduan Pelaksanaan SKPM 2025 — AnyFlip](https://anyflip.com/tqvbi/yhdy/basic)
+- Rujukan asas: *Buku Panduan Pengurusan Kokurikulum Sekolah*, KPM; *SKPMg2* Standard 3.4 & 4 (fokus **impak terhadap murid**).
 
 > Nota: pautan di atas ialah panduan komuniti guru, bukan dokumen rasmi KPM.
 > Untuk keperluan audit rasmi, sahkan dengan templat terkini dari PPD/JPN sekolah anda.
