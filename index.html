@@ -918,6 +918,16 @@
       </div>
     </div>
 
+    <div class="field" style="margin-bottom:14px;">
+      <div class="field-header">
+        <label>Impak Program</label>
+        <button class="btn-ai" id="btn-ai-impak" onclick="janaAI('impak')" type="button">
+          <span class="ai-icon">✨</span> Jana AI
+        </button>
+      </div>
+      <textarea id="impak" placeholder="Nyatakan impak / kesan program terhadap murid & sekolah... atau klik ✨ Jana AI"></textarea>
+    </div>
+
     <div class="section-title">Gambar Program</div>
 
     <div class="upload-btn-row">
@@ -1051,11 +1061,19 @@
           <td colspan="2" id="pdf-kekuatan" style="vertical-align:top;min-height:60px;"></td>
           <td colspan="2" id="pdf-kelemahan" style="vertical-align:top;min-height:60px;"></td>
         </tr>
+
+        <!-- Section: Impak Program -->
+        <tr class="pdf-section-header">
+          <td colspan="4">F. IMPAK PROGRAM</td>
+        </tr>
+        <tr>
+          <td colspan="4" class="full-width" id="pdf-impak" style="min-height:50px;"></td>
+        </tr>
       </table>
 
       <!-- Images section -->
       <div id="pdf-images-section" style="display:none;">
-        <div class="pdf-images-title">F. DOKUMENTASI GAMBAR PROGRAM</div>
+        <div class="pdf-images-title">G. DOKUMENTASI GAMBAR PROGRAM</div>
         <div class="pdf-images-grid" id="pdf-images-grid"></div>
       </div>
 
@@ -1139,6 +1157,11 @@ Maklumat Program:
 ${konteks}`,
 
     kelemahan: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan KELEMAHAN DAN CADANGAN PENAMBAHBAIKAN dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 2 hingga 3 kelemahan beserta cadangan penambahbaikan yang konstruktif. HANYA tulis kelemahan dan cadangan sahaja, tiada pengenalan atau penutup.
+
+Maklumat Program:
+${konteks}`,
+
+    impak: `Kamu adalah pembantu penulisan laporan program sekolah yang profesional. Berdasarkan maklumat program berikut, tuliskan IMPAK PROGRAM dalam format laporan rasmi sekolah kebangsaan Malaysia dalam Bahasa Melayu yang formal. Tulis dalam bentuk ayat bernombor (1., 2., 3.) antara 3 hingga 4 impak. Impak mestilah kesan sebenar terhadap murid dan sekolah (peningkatan pengetahuan, kemahiran, sikap/nilai, penyertaan atau pencapaian) dan dikaitkan semula dengan objektif program — bukan sekadar mengulang objektif. Nyatakan bukti atau anggaran peratusan jika sesuai. HANYA tulis senarai impak sahaja, tiada pengenalan atau penutup.
 
 Maklumat Program:
 ${konteks}`
@@ -1313,6 +1336,7 @@ async function generatePDF() {
     aktiviti: document.getElementById('aktiviti').value.trim(),
     kekuatan: document.getElementById('kekuatan').value.trim(),
     kelemahan: document.getElementById('kelemahan').value.trim(),
+    impak: document.getElementById('impak').value.trim(),
   };
 
   // Validate tetapan sekolah dahulu
@@ -1357,6 +1381,7 @@ async function generatePDF() {
   document.getElementById('pdf-aktiviti').innerHTML = formatTextToHtml(fields.aktiviti);
   document.getElementById('pdf-kekuatan').innerHTML = formatTextToHtml(fields.kekuatan);
   document.getElementById('pdf-kelemahan').innerHTML = formatTextToHtml(fields.kelemahan);
+  document.getElementById('pdf-impak').innerHTML = formatTextToHtml(fields.impak);
 
   // Date generated
   const now = new Date();
