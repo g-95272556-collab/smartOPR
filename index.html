@@ -959,15 +959,15 @@
 <div class="popup-kredit" id="popup-kredit">
   <div class="popup-kredit-box">
     <div class="popup-kredit-icon">💳⚠️</div>
-    <div class="popup-kredit-title">Kredit DeepSeek Habis!</div>
+    <div class="popup-kredit-title">Had Penggunaan AI Dicapai!</div>
     <div class="popup-kredit-msg">
-      Kredit AI anda telah habis atau tidak mencukupi.<br>
-      Sila topup kredit DeepSeek untuk terus menggunakan ciri Jana AI.<br><br>
+      Kuota harian AI (percuma) telah habis atau had kadar dicapai buat sementara.<br>
+      Sila cuba semula sebentar lagi atau esok.<br><br>
       <small style="color:#888;">Anda masih boleh mengisi laporan secara manual.</small>
     </div>
     <div class="popup-kredit-btns">
-      <button class="popup-kredit-btn-topup" onclick="window.open('https://platform.deepseek.com/usage','_blank');closePopupKredit()">
-        💰 Topup Kredit
+      <button class="popup-kredit-btn-topup" onclick="window.open('https://aistudio.google.com/app/apikey','_blank');closePopupKredit()">
+        🔑 Semak Kuota / API Key
       </button>
       <button class="popup-kredit-btn-close" onclick="closePopupKredit()">
         Tutup
@@ -1085,7 +1085,7 @@
   </div><!-- /pdf-page -->
 </div><!-- /pdf-template -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ===== AI GENERATION =====
 async function janaAI(field) {
   const namaProgram = document.getElementById('nama_program').value.trim();
@@ -1144,8 +1144,10 @@ Maklumat Program:
 ${konteks}`
   };
 
-  // ⚙️ URL Cloudflare Worker anda (DeepSeek) — gantikan selepas deploy
-  const WORKER_URL = 'https://smartopr-ai-v2.g-95272556.workers.dev';
+  // ⚙️ Endpoint proxy AI (Vercel Serverless Function — lihat api/jana.js).
+  // Relatif = sama origin bila di-host di Vercel. Jika app di-host di tempat lain,
+  // tukar kepada URL penuh, cth: 'https://smartopr.vercel.app/api/jana'
+  const WORKER_URL = '/api/jana';
 
   try {
     const response = await fetch(WORKER_URL, {
@@ -1172,7 +1174,7 @@ ${konteks}`
       throw new Error(data.error);
     }
 
-    // Extract text - support both DeepSeek and Claude response formats
+    // Extract text - support OpenAI-style (choices) & Claude-style (content) responses
     let result = '';
     if (data.content && Array.isArray(data.content)) {
       result = data.content[0]?.text || data.content.find(b => b.type === 'text')?.text || '';
@@ -1519,30 +1521,82 @@ function closePopupKredit() {
   document.getElementById('popup-kredit').classList.remove('show');
 }
 
+async function triggerPdfDownload(pdf, filename) {
+  const pdfBlob = pdf.output('blob');
+
+  if (navigator.share && navigator.canShare) {
+    try {
+      const pdfFile = new File([pdfBlob], filename, { type: 'application/pdf' });
+      if (navigator.canShare({ files: [pdfFile] })) {
+        await navigator.share({
+          files: [pdfFile],
+          title: filename,
+          text: 'Laporan OPR siap dijana.'
+        });
+        return { ok: true, mode: 'share' };
+      }
+    } catch (err) {
+      // Abaikan dan teruskan ke fallback lain.
+    }
+  }
+
+  let blobUrl = URL.createObjectURL(pdfBlob);
+
+  try {
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      if (a.parentNode) a.parentNode.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    }, 1500);
+    return { ok: true, mode: 'download' };
+  } catch (err) {
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  blobUrl = URL.createObjectURL(pdfBlob);
+
+  try {
+    const viewerTab = window.open(blobUrl, '_blank', 'noopener');
+    if (viewerTab) {
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      return { ok: true, mode: 'viewer' };
+    }
+  } catch (err) {
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  try {
+    await pdf.save(filename, { returnPromise: true });
+    return { ok: true, mode: 'save' };
+  } catch (err) {
+    return { ok: false, error: err };
+  }
+}
+
 function closePopupAndDownload() {
   document.getElementById('popup-overlay').classList.remove('show');
   if (window._pendingPdfDownload) {
     const { pdf, filename } = window._pendingPdfDownload;
-    try {
-      // Cuba kaedah Blob URL — lebih serasi Android
-      const pdfBlob = pdf.output('blob');
-      const blobUrl = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = filename;
-      a.target = '_blank';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-      }, 1000);
-    } catch(e) {
-      // Fallback — kaedah standard
-      pdf.save(filename);
-    }
     window._pendingPdfDownload = null;
-    showStatus('✅ PDF berjaya dijana dan dimuat turun!', 'success');
+    triggerPdfDownload(pdf, filename).then((result) => {
+      if (result?.ok) {
+        if (result.mode === 'viewer') {
+          showStatus('✅ PDF dibuka pada tab baharu. Jika muat turun tidak bermula automatik, guna menu browser untuk simpan fail.', 'success');
+        } else if (result.mode === 'share') {
+          showStatus('✅ PDF berjaya dijana. Gunakan paparan kongsi untuk simpan atau hantar fail.', 'success');
+        } else {
+          showStatus('✅ PDF berjaya dijana dan dimuat turun!', 'success');
+        }
+      } else {
+        const msg = result?.error?.message || 'Browser ini menyekat muat turun automatik.';
+        showStatus('❌ Gagal memuat turun PDF: ' + msg, 'error');
+      }
+    });
   }
 }
 
